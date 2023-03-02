@@ -77,7 +77,7 @@
          <number>5</number>
         </property>
         <property name="columnCount">
-         <number>4</number>
+         <number>5</number>
         </property>
         <attribute name="horizontalHeaderVisible">
          <bool>true</bool>
@@ -115,12 +115,17 @@
         </column>
         <column>
          <property name="text">
+          <string>Type</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
           <string>Name</string>
          </property>
         </column>
         <column>
          <property name="text">
-          <string>Image</string>
+          <string>Thumbnail</string>
          </property>
         </column>
         <column>
@@ -144,16 +149,59 @@
           <property name="maxVisibleItems">
            <number>9</number>
           </property>
+          <item>
+           <property name="text">
+            <string>PS2 Games</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Nendoroids</string>
+           </property>
+          </item>
          </widget>
         </item>
        </layout>
       </item>
       <item row="2" column="0">
        <layout class="QGridLayout" name="gridLayout_3">
+        <item row="0" column="4">
+         <spacer name="horizontalSpacer">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLabel" name="labelAddUPC">
+          <property name="text">
+           <string>Add UPC: </string>
+          </property>
+         </widget>
+        </item>
         <item row="0" column="0">
-         <widget class="QPushButton" name="pushButton">
+         <spacer name="horizontalSpacer_2">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="0" column="3">
+         <widget class="QPushButton" name="buttonAddUPC">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
@@ -161,17 +209,27 @@
           <property name="minimumSize">
            <size>
             <width>32</width>
-            <height>32</height>
+            <height>0</height>
            </size>
           </property>
           <property name="maximumSize">
            <size>
             <width>32</width>
-            <height>32</height>
+            <height>16777215</height>
            </size>
           </property>
           <property name="text">
            <string>+</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="2">
+         <widget class="QLineEdit" name="lineEditAddUPC">
+          <property name="maximumSize">
+           <size>
+            <width>100</width>
+            <height>16777215</height>
+           </size>
           </property>
          </widget>
         </item>
@@ -198,8 +256,9 @@
      <string>File</string>
     </property>
     <addaction name="actionOptions"/>
+    <addaction name="separator"/>
     <addaction name="actionImport"/>
-    <addaction name="actionExport"/>
+    <addaction name="separator"/>
     <addaction name="actionQuit"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
@@ -208,13 +267,30 @@
     </property>
     <addaction name="actionAbout"/>
    </widget>
+   <widget class="QMenu" name="menuTools">
+    <property name="title">
+     <string>Tools</string>
+    </property>
+    <addaction name="actionGenerate_HTML_Report"/>
+   </widget>
+   <widget class="QMenu" name="menuCategory">
+    <property name="title">
+     <string>Category</string>
+    </property>
+    <addaction name="actionRefresh_Selected"/>
+    <addaction name="actionRefresh_All"/>
+    <addaction name="separator"/>
+    <addaction name="actionDelete_Selected"/>
+    <addaction name="actionDelete_All"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuCategory"/>
+   <addaction name="menuTools"/>
    <addaction name="menuHelp"/>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
   <action name="actionImport">
    <property name="text">
-    <string>Import...</string>
+    <string>Import UPCs...</string>
    </property>
   </action>
   <action name="actionExport">
@@ -235,6 +311,31 @@
   <action name="actionAbout">
    <property name="text">
     <string>About</string>
+   </property>
+  </action>
+  <action name="actionRefresh_All">
+   <property name="text">
+    <string>Refresh All</string>
+   </property>
+  </action>
+  <action name="actionDelete_Selected">
+   <property name="text">
+    <string>Delete Selected</string>
+   </property>
+  </action>
+  <action name="actionRefresh_Selected">
+   <property name="text">
+    <string>Refresh Selected</string>
+   </property>
+  </action>
+  <action name="actionDelete_All">
+   <property name="text">
+    <string>Delete All</string>
+   </property>
+  </action>
+  <action name="actionGenerate_HTML_Report">
+   <property name="text">
+    <string>Generate HTML Report</string>
    </property>
   </action>
  </widget>
