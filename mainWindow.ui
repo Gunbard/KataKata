@@ -38,8 +38,8 @@
       <property name="sizeConstraint">
        <enum>QLayout::SetMaximumSize</enum>
       </property>
-      <item row="0" column="0">
-       <widget class="QTableWidget" name="tableWidget">
+      <item row="1" column="0">
+       <widget class="QTableWidget" name="tableData">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
           <horstretch>0</horstretch>
@@ -50,25 +50,31 @@
          <enum>QAbstractScrollArea::AdjustToContents</enum>
         </property>
         <property name="editTriggers">
-         <set>QAbstractItemView::NoEditTriggers</set>
+         <set>QAbstractItemView::AnyKeyPressed|QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed</set>
+        </property>
+        <property name="dragEnabled">
+         <bool>true</bool>
+        </property>
+        <property name="dragDropMode">
+         <enum>QAbstractItemView::DragDrop</enum>
         </property>
         <property name="alternatingRowColors">
          <bool>true</bool>
         </property>
         <property name="selectionMode">
-         <enum>QAbstractItemView::NoSelection</enum>
+         <enum>QAbstractItemView::ExtendedSelection</enum>
         </property>
         <property name="selectionBehavior">
-         <enum>QAbstractItemView::SelectItems</enum>
+         <enum>QAbstractItemView::SelectRows</enum>
         </property>
         <property name="sortingEnabled">
          <bool>true</bool>
         </property>
         <property name="cornerButtonEnabled">
-         <bool>false</bool>
+         <bool>true</bool>
         </property>
         <property name="rowCount">
-         <number>1</number>
+         <number>5</number>
         </property>
         <property name="columnCount">
          <number>4</number>
@@ -79,24 +85,97 @@
         <attribute name="horizontalHeaderCascadingSectionResizes">
          <bool>false</bool>
         </attribute>
+        <attribute name="horizontalHeaderDefaultSectionSize">
+         <number>120</number>
+        </attribute>
         <attribute name="horizontalHeaderStretchLastSection">
          <bool>true</bool>
         </attribute>
         <attribute name="verticalHeaderVisible">
-         <bool>false</bool>
+         <bool>true</bool>
+        </attribute>
+        <attribute name="verticalHeaderDefaultSectionSize">
+         <number>64</number>
         </attribute>
         <attribute name="verticalHeaderShowSortIndicator" stdset="0">
          <bool>false</bool>
         </attribute>
         <attribute name="verticalHeaderStretchLastSection">
-         <bool>true</bool>
+         <bool>false</bool>
         </attribute>
         <row/>
-        <column/>
-        <column/>
-        <column/>
-        <column/>
+        <row/>
+        <row/>
+        <row/>
+        <row/>
+        <column>
+         <property name="text">
+          <string>UPC</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Name</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Image</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Note</string>
+         </property>
+        </column>
        </widget>
+      </item>
+      <item row="0" column="0">
+       <layout class="QFormLayout" name="formLayout">
+        <item row="0" column="0">
+         <widget class="QLabel" name="labelCategory">
+          <property name="text">
+           <string>Category: </string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QComboBox" name="comboBoxCategory">
+          <property name="maxVisibleItems">
+           <number>9</number>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="2" column="0">
+       <layout class="QGridLayout" name="gridLayout_3">
+        <item row="0" column="0">
+         <widget class="QPushButton" name="pushButton">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>32</width>
+            <height>32</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>32</width>
+            <height>32</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>+</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
      </layout>
     </item>
