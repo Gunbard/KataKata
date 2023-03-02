@@ -27,6 +27,7 @@ MainWindow.setWindowTitle(WINDOW_TITLE)
 MainWindow.show()
 
 ui.actionQuit.triggered.connect(lambda: app.quit())
+ui.statusBar.showMessage('12 items in [PS2 Games]')
 
 with loop:
     loop.run_forever()

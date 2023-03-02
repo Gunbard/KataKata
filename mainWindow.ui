@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>800</width>
-    <height>600</height>
+    <height>598</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -24,6 +24,9 @@
   </property>
   <property name="autoFillBackground">
    <bool>false</bool>
+  </property>
+  <property name="styleSheet">
+   <string notr="true"/>
   </property>
   <widget class="QWidget" name="centralwidget">
    <property name="sizePolicy">
@@ -110,6 +113,11 @@
         <row/>
         <column>
          <property name="text">
+          <string>Name</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
           <string>UPC</string>
          </property>
         </column>
@@ -120,12 +128,7 @@
         </column>
         <column>
          <property name="text">
-          <string>Name</string>
-         </property>
-        </column>
-        <column>
-         <property name="text">
-          <string>Thumbnail</string>
+          <string>Image</string>
          </property>
         </column>
         <column>
@@ -165,38 +168,12 @@
       </item>
       <item row="2" column="0">
        <layout class="QGridLayout" name="gridLayout_3">
-        <item row="0" column="4">
-         <spacer name="horizontalSpacer">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item row="0" column="1">
-         <widget class="QLabel" name="labelAddUPC">
+        <item row="0" column="5">
+         <widget class="QCheckBox" name="checkBoxAutorefreshUPC">
           <property name="text">
-           <string>Add UPC: </string>
+           <string>Auto-refresh newly added UPCs</string>
           </property>
          </widget>
-        </item>
-        <item row="0" column="0">
-         <spacer name="horizontalSpacer_2">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
         </item>
         <item row="0" column="3">
          <widget class="QPushButton" name="buttonAddUPC">
@@ -223,6 +200,26 @@
           </property>
          </widget>
         </item>
+        <item row="0" column="0">
+         <spacer name="horizontalSpacer_2">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLabel" name="labelAddUPC">
+          <property name="text">
+           <string>Add UPC: </string>
+          </property>
+         </widget>
+        </item>
         <item row="0" column="2">
          <widget class="QLineEdit" name="lineEditAddUPC">
           <property name="maximumSize">
@@ -232,6 +229,35 @@
            </size>
           </property>
          </widget>
+        </item>
+        <item row="0" column="6">
+         <spacer name="horizontalSpacer">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="0" column="4">
+         <spacer name="horizontalSpacer_3">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Fixed</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>10</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
         </item>
        </layout>
       </item>
@@ -245,7 +271,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>22</height>
+     <height>18</height>
     </rect>
    </property>
    <property name="nativeMenuBar">
@@ -271,6 +297,8 @@
     <property name="title">
      <string>Tools</string>
     </property>
+    <addaction name="actionManage_Categories"/>
+    <addaction name="actionExport_to_CSV"/>
     <addaction name="actionGenerate_HTML_Report"/>
    </widget>
    <widget class="QMenu" name="menuCategory">
@@ -288,6 +316,7 @@
    <addaction name="menuTools"/>
    <addaction name="menuHelp"/>
   </widget>
+  <widget class="QStatusBar" name="statusBar"/>
   <action name="actionImport">
    <property name="text">
     <string>Import UPCs...</string>
@@ -336,6 +365,16 @@
   <action name="actionGenerate_HTML_Report">
    <property name="text">
     <string>Generate HTML Report</string>
+   </property>
+  </action>
+  <action name="actionExport_to_CSV">
+   <property name="text">
+    <string>Export to CSV</string>
+   </property>
+  </action>
+  <action name="actionManage_Categories">
+   <property name="text">
+    <string>Manage Categories...</string>
    </property>
   </action>
  </widget>
