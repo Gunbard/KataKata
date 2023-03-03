@@ -77,10 +77,10 @@
          <bool>true</bool>
         </property>
         <property name="rowCount">
-         <number>5</number>
+         <number>0</number>
         </property>
         <property name="columnCount">
-         <number>5</number>
+         <number>6</number>
         </property>
         <attribute name="horizontalHeaderVisible">
          <bool>true</bool>
@@ -90,6 +90,9 @@
         </attribute>
         <attribute name="horizontalHeaderDefaultSectionSize">
          <number>120</number>
+        </attribute>
+        <attribute name="horizontalHeaderHighlightSections">
+         <bool>false</bool>
         </attribute>
         <attribute name="horizontalHeaderStretchLastSection">
          <bool>true</bool>
@@ -106,14 +109,14 @@
         <attribute name="verticalHeaderStretchLastSection">
          <bool>false</bool>
         </attribute>
-        <row/>
-        <row/>
-        <row/>
-        <row/>
-        <row/>
         <column>
          <property name="text">
           <string>Name</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Description</string>
          </property>
         </column>
         <column>
@@ -141,14 +144,14 @@
       <item row="0" column="0">
        <layout class="QFormLayout" name="formLayout">
         <item row="0" column="0">
-         <widget class="QLabel" name="labelCategory">
+         <widget class="QLabel" name="labelCatalog">
           <property name="text">
-           <string>Category: </string>
+           <string>Catalog: </string>
           </property>
          </widget>
         </item>
         <item row="0" column="1">
-         <widget class="QComboBox" name="comboBoxCategory">
+         <widget class="QComboBox" name="comboBoxCatalog">
           <property name="maxVisibleItems">
            <number>9</number>
           </property>
@@ -297,13 +300,13 @@
     <property name="title">
      <string>Tools</string>
     </property>
-    <addaction name="actionManage_Categories"/>
+    <addaction name="actionManage_Catalogs"/>
     <addaction name="actionExport_to_CSV"/>
     <addaction name="actionGenerate_HTML_Report"/>
    </widget>
    <widget class="QMenu" name="menuCategory">
     <property name="title">
-     <string>Category</string>
+     <string>Item</string>
     </property>
     <addaction name="actionRefresh_Selected"/>
     <addaction name="actionRefresh_All"/>
@@ -372,9 +375,9 @@
     <string>Export to CSV</string>
    </property>
   </action>
-  <action name="actionManage_Categories">
+  <action name="actionManage_Catalogs">
    <property name="text">
-    <string>Manage Categories...</string>
+    <string>Manage Catalogs...</string>
    </property>
   </action>
  </widget>

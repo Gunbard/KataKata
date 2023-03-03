@@ -4,6 +4,8 @@
 import json, os, sys, asyncio, qasync
 from mainWindow import Ui_MainWindow
 from PyQt5 import QtCore, QtWidgets
+from PyQt5.QtWidgets import QTableWidgetItem
+from upcDataRetriever import UpcDataRetriever
 
 APP_TITLE = 'KanaKana'
 VERSION = '0.1.0'
@@ -28,6 +30,22 @@ MainWindow.show()
 
 ui.actionQuit.triggered.connect(lambda: app.quit())
 ui.statusBar.showMessage('12 items in [PS2 Games]')
+
+def addUpc():
+    upc = ui.lineEditAddUPC.text()
+    if not upc:
+        return
+
+    upcDataRetriever = UpcDataRetriever(upc)
+    stuff = upcDataRetriever.get()
+    ui.tableData.setRowCount(ui.tableData.rowCount() + 1)
+    ui.tableData.setItem(ui.tableData.rowCount() - 1, 0, QTableWidgetItem(stuff['title']))
+    ui.tableData.setItem(ui.tableData.rowCount() - 1, 1, QTableWidgetItem(stuff['description']))
+    ui.tableData.setItem(ui.tableData.rowCount() - 1, 2, QTableWidgetItem(upc))
+    ui.lineEditAddUPC.clear()
+
+ui.buttonAddUPC.clicked.connect(addUpc)
+ui.lineEditAddUPC.returnPressed.connect(addUpc)
 
 with loop:
     loop.run_forever()
