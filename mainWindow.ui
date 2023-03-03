@@ -80,7 +80,7 @@
          <number>0</number>
         </property>
         <property name="columnCount">
-         <number>6</number>
+         <number>5</number>
         </property>
         <attribute name="horizontalHeaderVisible">
          <bool>true</bool>
@@ -122,11 +122,6 @@
         <column>
          <property name="text">
           <string>UPC</string>
-         </property>
-        </column>
-        <column>
-         <property name="text">
-          <string>Type</string>
          </property>
         </column>
         <column>
