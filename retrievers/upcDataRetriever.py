@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+from models.itemModel import ItemModel
 
 class UpcDataRetriever:
     RESOURCE_URL = "https://go-upc.com/search?q={}"
@@ -29,8 +30,4 @@ class UpcDataRetriever:
         print(image_url)
         print(description)
 
-        return {
-            'title': title, 
-            'image_url': image_url, 
-            'description': description
-        }
+        return ItemModel(title, description, image_url, self.upc, None)

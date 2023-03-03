@@ -7,6 +7,9 @@ class ImageRetriever:
         self.url = url
 
     def get(self):
+        if not self.url:
+            return None
+            
         response = requests.get(self.url, stream=True)
         pixmap = QPixmap()
         pixmap.loadFromData(response.raw.data)

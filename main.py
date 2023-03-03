@@ -3,9 +3,11 @@
 
 import json, os, sys, asyncio, qasync
 from mainWindow import Ui_MainWindow
+from enum import Enum
 from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtWidgets import QTableWidgetItem, QLabel, QMenu
 from pyqtspinner import WaitingSpinner
+from models.itemModel import ItemModel
 from retrievers.upcDataRetriever import UpcDataRetriever
 from retrievers.imageRetriever import ImageRetriever
 
@@ -14,6 +16,15 @@ VERSION = '0.1.0'
 WINDOW_TITLE = "{} {}".format(APP_TITLE, VERSION)
 
 MAX_BATCH_SIZE = 1 
+
+class TableColumns(Enum):
+    NAME = 0
+    DESCRIPTION = 1
+    IMAGE = 2
+    UPC = 3
+    NOTE = 4
+
+# APP SETUP
 
 QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
 QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_DisableWindowContextHelpButton)
@@ -30,7 +41,21 @@ ui.setupUi(MainWindow)
 MainWindow.setWindowTitle(WINDOW_TITLE)
 MainWindow.show()
 
-ui.actionQuit.triggered.connect(lambda: app.quit())
+def addItem(item):
+    table = ui.tableData
+    table.setRowCount(table.rowCount() + 1)
+    lastRow = table.rowCount() - 1
+    table.setItem(lastRow, TableColumns.NAME.value, QTableWidgetItem(item.name))
+    table.setItem(lastRow, TableColumns.DESCRIPTION.value, QTableWidgetItem(item.description))
+    table.setItem(lastRow, TableColumns.UPC.value, QTableWidgetItem(item.upc))
+    
+    image = ImageRetriever(item.image_url).get()
+    newLabel = QLabel()
+    newLabel.setAlignment(QtCore.Qt.AlignCenter)
+    if image:
+        newLabel.setPixmap(image)
+
+    table.setCellWidget(lastRow, TableColumns.IMAGE.value, newLabel)
 
 def addUpc():
     upc = ui.lineEditAddUPC.text()
@@ -38,8 +63,7 @@ def addUpc():
         return
 
     if not ui.checkBoxAutorefreshUPC.isChecked():
-        ui.tableData.setRowCount(ui.tableData.rowCount() + 1)
-        ui.tableData.setItem(ui.tableData.rowCount() - 1, 2, QTableWidgetItem(upc))
+        addItem(ItemModel(None, None, None, upc, None))
         ui.lineEditAddUPC.clear()
         return
 
@@ -47,15 +71,8 @@ def addUpc():
     if not upcData:
         return
 
-    ui.tableData.setRowCount(ui.tableData.rowCount() + 1)
-    ui.tableData.setItem(ui.tableData.rowCount() - 1, 0, QTableWidgetItem(upcData['title']))
-    ui.tableData.setItem(ui.tableData.rowCount() - 1, 1, QTableWidgetItem(upcData['description']))
-    ui.tableData.setItem(ui.tableData.rowCount() - 1, 2, QTableWidgetItem(upc))
-    image = ImageRetriever(upcData['image_url']).get()
-    newLabel = QLabel()
-    newLabel.setAlignment(QtCore.Qt.AlignCenter)
-    newLabel.setPixmap(image)
-    ui.tableData.setCellWidget(ui.tableData.rowCount() - 1, 3, newLabel)
+    addItem(upcData)
+    
     ui.lineEditAddUPC.clear()
     ui.statusBar.showMessage("{} item(s) in [PS2 Games]".format(ui.tableData.rowCount()))
 
@@ -70,10 +87,11 @@ def tableContextMenu(position):
     action = menu.exec_(ui.tableData.mapToGlobal(position))
     #if action == refreshAction:
         
-
+# EVENTS
 ui.buttonAddUPC.clicked.connect(addUpc)
 ui.lineEditAddUPC.returnPressed.connect(addUpc)
 ui.tableData.customContextMenuRequested.connect(tableContextMenu)
+ui.actionQuit.triggered.connect(lambda: app.quit())
 
 #spinner = WaitingSpinner(ui.tableData, True, True, QtCore.Qt.ApplicationModal)
 #spinner.start() # starts spinning
