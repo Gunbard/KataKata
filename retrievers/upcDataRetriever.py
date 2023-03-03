@@ -25,13 +25,9 @@ class UpcDataRetriever:
         image_url = soup.find('img')['src']
         description = soup.find('h2').parent.find('span').text.strip()
 
-        #type_element = soup.find(text='Type:')
-        #type = type_element.parent.parent.text.replace('Type: ', '') if type_element else None
-
         print(title)
         print(image_url)
         print(description)
-        #print(type)
 
         return {
             'title': title, 

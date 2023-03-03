@@ -49,6 +49,9 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
+        <property name="contextMenuPolicy">
+         <enum>Qt::CustomContextMenu</enum>
+        </property>
         <property name="sizeAdjustPolicy">
          <enum>QAbstractScrollArea::AdjustToContents</enum>
         </property>
@@ -56,10 +59,16 @@
          <set>QAbstractItemView::AnyKeyPressed|QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed</set>
         </property>
         <property name="dragEnabled">
-         <bool>true</bool>
+         <bool>false</bool>
+        </property>
+        <property name="dragDropOverwriteMode">
+         <bool>false</bool>
         </property>
         <property name="dragDropMode">
-         <enum>QAbstractItemView::DragDrop</enum>
+         <enum>QAbstractItemView::NoDragDrop</enum>
+        </property>
+        <property name="defaultDropAction">
+         <enum>Qt::IgnoreAction</enum>
         </property>
         <property name="alternatingRowColors">
          <bool>true</bool>
@@ -121,12 +130,12 @@
         </column>
         <column>
          <property name="text">
-          <string>UPC</string>
+          <string>Image</string>
          </property>
         </column>
         <column>
          <property name="text">
-          <string>Image</string>
+          <string>UPC</string>
          </property>
         </column>
         <column>
@@ -170,6 +179,9 @@
          <widget class="QCheckBox" name="checkBoxAutorefreshUPC">
           <property name="text">
            <string>Auto-refresh newly added UPCs</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -282,6 +294,7 @@
     <addaction name="actionOptions"/>
     <addaction name="separator"/>
     <addaction name="actionImport"/>
+    <addaction name="actionExport_to_CSV_2"/>
     <addaction name="separator"/>
     <addaction name="actionQuit"/>
    </widget>
@@ -296,28 +309,16 @@
      <string>Tools</string>
     </property>
     <addaction name="actionManage_Catalogs"/>
-    <addaction name="actionExport_to_CSV"/>
     <addaction name="actionGenerate_HTML_Report"/>
    </widget>
-   <widget class="QMenu" name="menuCategory">
-    <property name="title">
-     <string>Item</string>
-    </property>
-    <addaction name="actionRefresh_Selected"/>
-    <addaction name="actionRefresh_All"/>
-    <addaction name="separator"/>
-    <addaction name="actionDelete_Selected"/>
-    <addaction name="actionDelete_All"/>
-   </widget>
    <addaction name="menuFile"/>
-   <addaction name="menuCategory"/>
    <addaction name="menuTools"/>
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionImport">
    <property name="text">
-    <string>Import UPCs...</string>
+    <string>Import UPCs</string>
    </property>
   </action>
   <action name="actionExport">
@@ -373,6 +374,31 @@
   <action name="actionManage_Catalogs">
    <property name="text">
     <string>Manage Catalogs...</string>
+   </property>
+  </action>
+  <action name="actionExport_to_CSV_2">
+   <property name="text">
+    <string>Export to CSV</string>
+   </property>
+  </action>
+  <action name="actionRefresh_All_in_Catalog">
+   <property name="text">
+    <string>Refresh All</string>
+   </property>
+  </action>
+  <action name="actionDelete_All_in_Catalog">
+   <property name="text">
+    <string>Delete All in Catalog</string>
+   </property>
+  </action>
+  <action name="actionRefreshAll">
+   <property name="text">
+    <string>RefreshAll</string>
+   </property>
+  </action>
+  <action name="actionDeleteAll">
+   <property name="text">
+    <string>Delete All</string>
    </property>
   </action>
  </widget>
