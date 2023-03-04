@@ -71,6 +71,11 @@ def refreshSelection(selections):
             retriever.refresh(item)
     updateTable()
 
+def deleteSelection(selections):
+    for index in selections:
+        del categoryData[index.row()]
+    updateTable()
+
 def addUpc():
     upc = ui.lineEditAddUPC.text()
     if not upc:
@@ -96,8 +101,11 @@ def tableContextMenu(position):
     deleteAction = menu.addAction("Delete")
     
     action = menu.exec_(ui.tableData.mapToGlobal(position))
+    selection = ui.tableData.selectionModel().selectedRows()
     if action == refreshAction:
-        refreshSelection(ui.tableData.selectionModel().selectedRows())
+        refreshSelection(selection)
+    if action == deleteAction:
+        deleteSelection(selection)
         
 # EVENTS
 ui.buttonAddUPC.clicked.connect(addUpc)
