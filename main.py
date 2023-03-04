@@ -1,7 +1,11 @@
 # KataKata
 # Author: Gunbard
 
-import json, os, sys, asyncio, qasync
+import json
+import os
+import sys
+import asyncio
+import qasync
 from mainWindow import Ui_MainWindow
 from enum import Enum
 from PyQt5 import QtCore, QtWidgets
@@ -14,14 +18,16 @@ APP_TITLE = 'KataKata'
 VERSION = '0.1.0'
 WINDOW_TITLE = "{} {}".format(APP_TITLE, VERSION)
 
-MAX_BATCH_SIZE = 1 
+MAX_BATCH_SIZE = 1
+
 
 class TableColumns(Enum):
-    NAME = 0
-    DESCRIPTION = 1
-    IMAGE = 2
-    UPC = 3
-    NOTE = 4
+  NAME = 0
+  DESCRIPTION = 1
+  IMAGE = 2
+  UPC = 3
+  NOTE = 4
+
 
 categoryData = []
 
@@ -43,78 +49,80 @@ MainWindow.setWindowTitle(WINDOW_TITLE)
 MainWindow.show()
 
 def updateTable():
-    ui.tableData.setRowCount(0)
+  ui.tableData.setRowCount(0)
 
-    for item in categoryData:
-        addItem(item)
+  for item in categoryData:
+    addItem(item)
 
 def addItem(item):
-    table = ui.tableData
-    table.setRowCount(table.rowCount() + 1)
-    lastRow = table.rowCount() - 1
-    table.setItem(lastRow, TableColumns.NAME.value, QTableWidgetItem(item.name))
-    table.setItem(lastRow, TableColumns.DESCRIPTION.value, QTableWidgetItem(item.description))
-    table.setItem(lastRow, TableColumns.UPC.value, QTableWidgetItem(item.upc))
-    
-    newLabel = QLabel()
-    newLabel.setAlignment(QtCore.Qt.AlignCenter)
-    if item.image:
-        newLabel.setPixmap(item.image)
+  table = ui.tableData
+  table.setRowCount(table.rowCount() + 1)
+  lastRow = table.rowCount() - 1
+  table.setItem(lastRow, TableColumns.NAME.value, QTableWidgetItem(item.name))
+  table.setItem(lastRow, TableColumns.DESCRIPTION.value, QTableWidgetItem(item.description))
+  table.setItem(lastRow, TableColumns.UPC.value, QTableWidgetItem(item.upc))
 
-    table.setCellWidget(lastRow, TableColumns.IMAGE.value, newLabel)
+  newLabel = QLabel()
+  newLabel.setAlignment(QtCore.Qt.AlignCenter)
+  if item.image:
+    newLabel.setPixmap(item.image)
+
+  table.setCellWidget(lastRow, TableColumns.IMAGE.value, newLabel)
 
 def refreshSelection(selections):
-    retriever = UpcDataRetriever()
-    for index in selections:
-        item = categoryData[index.row()]
-        if item:
-            retriever.refresh(item)
-    updateTable()
+  retriever = UpcDataRetriever()
+  for index in selections:
+    item = categoryData[index.row()]
+    if item:
+      retriever.refresh(item)
+  updateTable()
 
 def deleteSelection(selections):
-    for index in selections:
-        del categoryData[index.row()]
-    updateTable()
+  for index in selections:
+    del categoryData[index.row()]
+  updateTable()
 
 def addUpc():
-    upc = ui.lineEditAddUPC.text()
-    if not upc:
-        return
+  upc = ui.lineEditAddUPC.text()
+  if not upc:
+    return
 
-    newItem = ItemModel(None, None, None, upc, None)
+  newItem = ItemModel(None, None, None, upc, None)
 
-    if ui.checkBoxAutorefreshUPC.isChecked():
-        UpcDataRetriever().refresh(newItem)
+  if ui.checkBoxAutorefreshUPC.isChecked():
+    UpcDataRetriever().refresh(newItem)
 
-    categoryData.append(newItem)
-    updateTable()
+  categoryData.append(newItem)
+  updateTable()
 
-    ui.lineEditAddUPC.clear()
-    ui.statusBar.showMessage("{} item(s) in [PS2 Games]".format(ui.tableData.rowCount()))
+  ui.lineEditAddUPC.clear()
+  ui.statusBar.showMessage(
+    "{} item(s) in [PS2 Games]".format(ui.tableData.rowCount()))
 
 def tableContextMenu(position):
-    if ui.tableData.rowCount() == 0:
-        return
-    menu = QMenu()
-    refreshAction = menu.addAction("Refresh")
-    menu.addSeparator()
-    deleteAction = menu.addAction("Delete")
-    
-    action = menu.exec_(ui.tableData.mapToGlobal(position))
-    selection = ui.tableData.selectionModel().selectedRows()
-    if action == refreshAction:
-        refreshSelection(selection)
-    if action == deleteAction:
-        deleteSelection(selection)
-        
+  if ui.tableData.rowCount() == 0:
+    return
+  menu = QMenu()
+  refreshAction = menu.addAction("Refresh")
+  menu.addSeparator()
+  deleteAction = menu.addAction("Delete")
+
+  action = menu.exec_(ui.tableData.mapToGlobal(position))
+  selection = ui.tableData.selectionModel().selectedRows()
+  if action == refreshAction:
+    refreshSelection(selection)
+  if action == deleteAction:
+    deleteSelection(selection)
+
+
 # EVENTS
 ui.buttonAddUPC.clicked.connect(addUpc)
 ui.lineEditAddUPC.returnPressed.connect(addUpc)
 ui.tableData.customContextMenuRequested.connect(tableContextMenu)
 ui.actionQuit.triggered.connect(lambda: app.quit())
 
-#spinner = WaitingSpinner(ui.tableData, True, True, QtCore.Qt.ApplicationModal)
-#spinner.start() # starts spinning
+# spinner = WaitingSpinner(ui.tableData, True, True, QtCore.Qt.ApplicationModal)
+# spinner.start() # starts spinning
 
 with loop:
-    loop.run_forever()
+  loop.run_forever()
