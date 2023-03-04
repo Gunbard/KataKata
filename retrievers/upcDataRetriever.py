@@ -5,16 +5,13 @@ from models.itemModel import ItemModel
 class UpcDataRetriever:
     RESOURCE_URL = "https://go-upc.com/search?q={}"
 
-    def __init__(self, upc):
-        self.upc = upc
-
-    def get(self):
-        if self.upc is None:
+    def refresh(self, item):
+        if item.upc is None:
             return None
 
-        print(self.upc)
+        print(item.upc)
 
-        response = requests.get(self.RESOURCE_URL.format(self.upc))
+        response = requests.get(self.RESOURCE_URL.format(item.upc))
         soup = BeautifulSoup(response.text, 'html.parser')
 
         title_element = soup.find('h1', {'class': 'product-name'})
@@ -30,4 +27,7 @@ class UpcDataRetriever:
         print(image_url)
         print(description)
 
-        return ItemModel(title, description, image_url, self.upc, None)
+        item.name = title
+        item.description = description
+        item.image_url = image_url
+        item.refreshImage()

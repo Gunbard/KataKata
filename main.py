@@ -7,9 +7,8 @@ from enum import Enum
 from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtWidgets import QTableWidgetItem, QLabel, QMenu
 from pyqtspinner import WaitingSpinner
-from models.itemModel import ItemModel
 from retrievers.upcDataRetriever import UpcDataRetriever
-from retrievers.imageRetriever import ImageRetriever
+from models.itemModel import ItemModel
 
 APP_TITLE = 'KataKata'
 VERSION = '0.1.0'
@@ -23,6 +22,8 @@ class TableColumns(Enum):
     IMAGE = 2
     UPC = 3
     NOTE = 4
+
+categoryData = []
 
 # APP SETUP
 
@@ -41,6 +42,12 @@ ui.setupUi(MainWindow)
 MainWindow.setWindowTitle(WINDOW_TITLE)
 MainWindow.show()
 
+def updateTable():
+    ui.tableData.setRowCount(0)
+
+    for item in categoryData:
+        addItem(item)
+
 def addItem(item):
     table = ui.tableData
     table.setRowCount(table.rowCount() + 1)
@@ -49,30 +56,34 @@ def addItem(item):
     table.setItem(lastRow, TableColumns.DESCRIPTION.value, QTableWidgetItem(item.description))
     table.setItem(lastRow, TableColumns.UPC.value, QTableWidgetItem(item.upc))
     
-    image = ImageRetriever(item.image_url).get()
     newLabel = QLabel()
     newLabel.setAlignment(QtCore.Qt.AlignCenter)
-    if image:
-        newLabel.setPixmap(image)
+    if item.image:
+        newLabel.setPixmap(item.image)
 
     table.setCellWidget(lastRow, TableColumns.IMAGE.value, newLabel)
+
+def refreshSelection(selections):
+    retriever = UpcDataRetriever()
+    for index in selections:
+        item = categoryData[index.row()]
+        if item:
+            retriever.refresh(item)
+    updateTable()
 
 def addUpc():
     upc = ui.lineEditAddUPC.text()
     if not upc:
         return
 
-    if not ui.checkBoxAutorefreshUPC.isChecked():
-        addItem(ItemModel(None, None, None, upc, None))
-        ui.lineEditAddUPC.clear()
-        return
+    newItem = ItemModel(None, None, None, upc, None)
 
-    upcData = UpcDataRetriever(upc).get()
-    if not upcData:
-        return
+    if ui.checkBoxAutorefreshUPC.isChecked():
+        UpcDataRetriever().refresh(newItem)
 
-    addItem(upcData)
-    
+    categoryData.append(newItem)
+    updateTable()
+
     ui.lineEditAddUPC.clear()
     ui.statusBar.showMessage("{} item(s) in [PS2 Games]".format(ui.tableData.rowCount()))
 
@@ -85,7 +96,8 @@ def tableContextMenu(position):
     deleteAction = menu.addAction("Delete")
     
     action = menu.exec_(ui.tableData.mapToGlobal(position))
-    #if action == refreshAction:
+    if action == refreshAction:
+        refreshSelection(ui.tableData.selectionModel().selectedRows())
         
 # EVENTS
 ui.buttonAddUPC.clicked.connect(addUpc)

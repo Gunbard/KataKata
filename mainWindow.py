@@ -49,7 +49,7 @@ class Ui_MainWindow(object):
         self.tableData.setDragDropMode(QtWidgets.QAbstractItemView.NoDragDrop)
         self.tableData.setDefaultDropAction(QtCore.Qt.IgnoreAction)
         self.tableData.setAlternatingRowColors(True)
-        self.tableData.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
+        self.tableData.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
         self.tableData.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
         self.tableData.setCornerButtonEnabled(True)
         self.tableData.setRowCount(0)
