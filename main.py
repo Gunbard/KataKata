@@ -13,6 +13,7 @@ from PyQt5.QtWidgets import QTableWidgetItem, QLabel, QMenu
 from pyqtspinner import WaitingSpinner
 from retrievers.upcDataRetriever import UpcDataRetriever
 from models.itemModel import ItemModel
+from manageCatalogs import Ui_ManageCatalogsDialog
 
 APP_TITLE = 'KataKata'
 VERSION = '0.1.0'
@@ -44,6 +45,10 @@ asyncio_semaphore = asyncio.Semaphore(MAX_BATCH_SIZE)
 MainWindow = QtWidgets.QMainWindow()
 ui = Ui_MainWindow()
 ui.setupUi(MainWindow)
+
+ManageCatalogsWindow = QtWidgets.QDialog(MainWindow)
+manageCatalogsUi = Ui_ManageCatalogsDialog()
+manageCatalogsUi.setupUi(ManageCatalogsWindow)
 
 MainWindow.setWindowTitle(WINDOW_TITLE)
 MainWindow.show()
@@ -130,11 +135,16 @@ def importFromFile():
       categoryData.append(ItemModel(None, None, None, line.strip(), None))
   updateTable()
 
+def showManageCatalogs():
+  if not ManageCatalogsWindow.isVisible():
+    ManageCatalogsWindow.show()
+
 # EVENTS
 ui.buttonAddUPC.clicked.connect(addUpc)
 ui.lineEditAddUPC.returnPressed.connect(addUpc)
 ui.tableData.customContextMenuRequested.connect(tableContextMenu)
 ui.actionImport.triggered.connect(importFromFile)
+ui.actionManage_Catalogs.triggered.connect(showManageCatalogs)
 ui.actionQuit.triggered.connect(lambda: app.quit())
 
 # spinner = WaitingSpinner(ui.tableData, True, True, QtCore.Qt.ApplicationModal)
