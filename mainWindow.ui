@@ -146,15 +146,24 @@
        </widget>
       </item>
       <item row="0" column="0">
-       <layout class="QFormLayout" name="formLayout">
-        <item row="0" column="0">
-         <widget class="QLabel" name="labelCatalog">
-          <property name="text">
-           <string>Catalog: </string>
-          </property>
-         </widget>
-        </item>
+       <layout class="QGridLayout" name="gridLayout_4">
         <item row="0" column="1">
+         <spacer name="horizontalSpacer_4">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Fixed</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>4</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="0" column="2">
          <widget class="QComboBox" name="comboBoxCatalog">
           <property name="maxVisibleItems">
            <number>9</number>
@@ -169,6 +178,19 @@
             <string>Nendoroids</string>
            </property>
           </item>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QLabel" name="labelCatalog">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>Catalog:</string>
+          </property>
          </widget>
         </item>
        </layout>
@@ -281,7 +303,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>18</height>
+     <height>22</height>
     </rect>
    </property>
    <property name="nativeMenuBar">
@@ -318,7 +340,7 @@
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionImport">
    <property name="text">
-    <string>Import UPCs</string>
+    <string>Import UPCs...</string>
    </property>
   </action>
   <action name="actionExport">
@@ -378,7 +400,7 @@
   </action>
   <action name="actionExport_to_CSV_2">
    <property name="text">
-    <string>Export to CSV</string>
+    <string>Export to CSV...</string>
    </property>
   </action>
   <action name="actionRefresh_All_in_Catalog">

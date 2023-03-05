@@ -59,8 +59,11 @@ def addItem(item):
   table.setRowCount(table.rowCount() + 1)
   lastRow = table.rowCount() - 1
   table.setItem(lastRow, TableColumns.NAME.value, QTableWidgetItem(item.name))
-  table.setItem(lastRow, TableColumns.DESCRIPTION.value, QTableWidgetItem(item.description))
   table.setItem(lastRow, TableColumns.UPC.value, QTableWidgetItem(item.upc))
+
+  descriptionItem = QTableWidgetItem(item.description)
+  descriptionItem.setToolTip(item.description)
+  table.setItem(lastRow, TableColumns.DESCRIPTION.value, descriptionItem)
 
   newLabel = QLabel()
   newLabel.setAlignment(QtCore.Qt.AlignCenter)
