@@ -54,12 +54,17 @@ def updateTable():
   for item in categoryData:
     addItem(item)
 
+  ui.statusBar.showMessage("{} item(s) in [category]".format(ui.tableData.rowCount()))
+
 def addItem(item):
   table = ui.tableData
   table.setRowCount(table.rowCount() + 1)
   lastRow = table.rowCount() - 1
-  table.setItem(lastRow, TableColumns.NAME.value, QTableWidgetItem(item.name))
   table.setItem(lastRow, TableColumns.UPC.value, QTableWidgetItem(item.upc))
+
+  itemName = QTableWidgetItem(item.name)
+  itemName.setToolTip(item.name)
+  table.setItem(lastRow, TableColumns.NAME.value, itemName)
 
   descriptionItem = QTableWidgetItem(item.description)
   descriptionItem.setToolTip(item.description)
@@ -99,8 +104,6 @@ def addUpc():
   updateTable()
 
   ui.lineEditAddUPC.clear()
-  ui.statusBar.showMessage(
-    "{} item(s) in [PS2 Games]".format(ui.tableData.rowCount()))
 
 def tableContextMenu(position):
   if ui.tableData.rowCount() == 0:
@@ -117,11 +120,21 @@ def tableContextMenu(position):
   if action == deleteAction:
     deleteSelection(selection)
 
+def importFromFile():
+  path = QtWidgets.QFileDialog.getOpenFileName(None, "Select file with list of UPCs...", os.curdir, \
+        "All files (*.*)")
+  if not path[0]:
+    return
+  fileHandle = open(path[0])
+  for line in fileHandle:
+      categoryData.append(ItemModel(None, None, None, line.strip(), None))
+  updateTable()
 
 # EVENTS
 ui.buttonAddUPC.clicked.connect(addUpc)
 ui.lineEditAddUPC.returnPressed.connect(addUpc)
 ui.tableData.customContextMenuRequested.connect(tableContextMenu)
+ui.actionImport.triggered.connect(importFromFile)
 ui.actionQuit.triggered.connect(lambda: app.quit())
 
 # spinner = WaitingSpinner(ui.tableData, True, True, QtCore.Qt.ApplicationModal)
