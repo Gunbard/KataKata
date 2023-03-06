@@ -11,6 +11,7 @@ from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtWidgets import QTableWidgetItem, QLabel, QMenu
 from pyqtspinner import WaitingSpinner
 from retrievers.upcDataRetriever import UpcDataRetriever
+from models.catalogModel import CatalogModel
 from models.itemModel import ItemModel
 
 APP_TITLE = 'KataKata'
@@ -27,8 +28,7 @@ class TableColumns(Enum):
   UPC = 3
   NOTE = 4
 
-
-catalogData = []
+currentCatalog = CatalogModel([], None)
 
 # APP SETUP
 
@@ -48,9 +48,10 @@ MainWindow.setWindowTitle(WINDOW_TITLE)
 MainWindow.show()
 
 def updateTable():
+  global currentCatalog
   ui.tableData.setRowCount(0)
 
-  for item in catalogData:
+  for item in currentCatalog.data:
     addItem(item)
 
   ui.statusBar.showMessage("{} item(s) in [catalog]".format(ui.tableData.rowCount()))
@@ -79,14 +80,14 @@ def addItem(item):
 def refreshSelection(selections):
   retriever = UpcDataRetriever()
   for index in selections:
-    item = catalogData[index.row()]
+    item = currentCatalog.data[index.row()]
     if item:
       retriever.refresh(item)
   updateTable()
 
 def deleteSelection(selections):
   for index in selections:
-    del catalogData[index.row()]
+    del currentCatalog.data[index.row()]
   updateTable()
 
 def addUpc():
@@ -99,7 +100,7 @@ def addUpc():
   if ui.checkBoxAutorefreshUPC.isChecked():
     UpcDataRetriever().refresh(newItem)
 
-  catalogData.append(newItem)
+  currentCatalog.data.append(newItem)
   updateTable()
 
   ui.lineEditAddUPC.clear()
@@ -126,13 +127,35 @@ def importFromFile():
     return
   fileHandle = open(path[0])
   for line in fileHandle:
-      catalogData.append(ItemModel(None, None, None, line.strip(), None))
+      currentCatalog.data.append(ItemModel(None, None, None, line.strip(), None))
   updateTable()
+
+def openCatalog():
+  global currentCatalog
+  
+  path = QtWidgets.QFileDialog.getOpenFileName(None, "Select a catalog file...", os.curdir, \
+        "Catalog file (*.json);;All files (*.*)")
+  currentCatalog = CatalogModel(None, path[0])
+  currentCatalog.load()
+  updateTable()
+
+def saveCatalog(forceSave):
+  global currentCatalog
+  if forceSave or not currentCatalog:
+    savePath = QtWidgets.QFileDialog.getSaveFileName(None, "Save catalog...", os.curdir, \
+    "Catalog file (*.json);;All files (*.*)")
+    if not savePath:
+      return
+    currentCatalog = CatalogModel(currentCatalog.data, savePath[0])
+    currentCatalog.save()
 
 # EVENTS
 ui.buttonAddUPC.clicked.connect(addUpc)
 ui.lineEditAddUPC.returnPressed.connect(addUpc)
 ui.tableData.customContextMenuRequested.connect(tableContextMenu)
+ui.actionOpen_Catalog.triggered.connect(openCatalog)
+ui.actionSave_Catalog.triggered.connect(saveCatalog)
+ui.actionSave_Catalog_As.triggered.connect(lambda: saveCatalog(True))
 ui.actionImport.triggered.connect(importFromFile)
 ui.actionQuit.triggered.connect(lambda: app.quit())
 

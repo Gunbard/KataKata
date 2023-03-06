@@ -263,7 +263,10 @@
     <property name="title">
      <string>File</string>
     </property>
+    <addaction name="actionNew_Catalog"/>
     <addaction name="actionOpen_Catalog"/>
+    <addaction name="actionSave_Catalog"/>
+    <addaction name="actionSave_Catalog_As"/>
     <addaction name="separator"/>
     <addaction name="actionOptions"/>
     <addaction name="separator"/>
@@ -377,6 +380,21 @@
   <action name="actionOpen_Catalog">
    <property name="text">
     <string>Open Catalog...</string>
+   </property>
+  </action>
+  <action name="actionNew_Catalog">
+   <property name="text">
+    <string>New Catalog</string>
+   </property>
+  </action>
+  <action name="actionSave_Catalog">
+   <property name="text">
+    <string>Save Catalog</string>
+   </property>
+  </action>
+  <action name="actionSave_Catalog_As">
+   <property name="text">
+    <string>Save Catalog As...</string>
    </property>
   </action>
  </widget>
