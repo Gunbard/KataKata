@@ -8,11 +8,10 @@ import qasync
 from mainWindow import Ui_MainWindow
 from enum import Enum
 from PyQt5 import QtCore, QtWidgets
-from PyQt5.QtWidgets import QTableWidgetItem, QLabel, QMenu, QListWidgetItem
+from PyQt5.QtWidgets import QTableWidgetItem, QLabel, QMenu
 from pyqtspinner import WaitingSpinner
 from retrievers.upcDataRetriever import UpcDataRetriever
 from models.itemModel import ItemModel
-from manageCatalogs import Ui_ManageCatalogsDialog
 
 APP_TITLE = 'KataKata'
 VERSION = '0.1.0'
@@ -44,10 +43,6 @@ asyncio_semaphore = asyncio.Semaphore(MAX_BATCH_SIZE)
 MainWindow = QtWidgets.QMainWindow()
 ui = Ui_MainWindow()
 ui.setupUi(MainWindow)
-
-ManageCatalogsWindow = QtWidgets.QDialog(MainWindow)
-manageCatalogsUi = Ui_ManageCatalogsDialog()
-manageCatalogsUi.setupUi(ManageCatalogsWindow)
 
 MainWindow.setWindowTitle(WINDOW_TITLE)
 MainWindow.show()
@@ -134,41 +129,11 @@ def importFromFile():
       catalogData.append(ItemModel(None, None, None, line.strip(), None))
   updateTable()
 
-def manageCatalogsClosed(event):
-  print('closed')
-
-def showManageCatalogs():
-  if not ManageCatalogsWindow.isVisible():
-    ManageCatalogsWindow.closeEvent = manageCatalogsClosed
-    ManageCatalogsWindow.show()
-
-def catalogComboBoxSelected():
-  if ui.comboBoxCatalog.count() == 1:
-    showManageCatalogs()
-
-def newCatalog():
-  newItem = QListWidgetItem('New catalog')
-  manageCatalogsUi.catalogList.addItem(newItem)
-  newItem.setFlags(newItem.flags() | QtCore.Qt.ItemIsEditable)
-  newItem.setSelected(True)
-  manageCatalogsUi.catalogList.editItem(newItem)
-
-def removeCatalog():
-  # TODO: Add confirm dialog
-  list = manageCatalogsUi.catalogList
-  selectedItems = list.selectedItems()
-  if len(selectedItems) > 0:
-   list.takeItem(list.row(selectedItems[0]))
-
 # EVENTS
 ui.buttonAddUPC.clicked.connect(addUpc)
 ui.lineEditAddUPC.returnPressed.connect(addUpc)
 ui.tableData.customContextMenuRequested.connect(tableContextMenu)
-ui.comboBoxCatalog.activated.connect(catalogComboBoxSelected)
-manageCatalogsUi.buttonNewCatalog.clicked.connect(newCatalog)
-manageCatalogsUi.buttonRemoveCatalog.clicked.connect(removeCatalog)
 ui.actionImport.triggered.connect(importFromFile)
-ui.actionManage_Catalogs.triggered.connect(showManageCatalogs)
 ui.actionQuit.triggered.connect(lambda: app.quit())
 
 # spinner = WaitingSpinner(ui.tableData, True, True, QtCore.Qt.ApplicationModal)

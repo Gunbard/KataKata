@@ -41,7 +41,7 @@
       <property name="sizeConstraint">
        <enum>QLayout::SetMaximumSize</enum>
       </property>
-      <item row="2" column="0">
+      <item row="1" column="0">
        <layout class="QGridLayout" name="gridLayout_3">
         <item row="0" column="5">
          <widget class="QCheckBox" name="checkBoxAutorefreshUPC">
@@ -139,7 +139,7 @@
         </item>
        </layout>
       </item>
-      <item row="1" column="0">
+      <item row="0" column="0">
        <widget class="QTableWidget" name="tableData">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -243,60 +243,6 @@
         </column>
        </widget>
       </item>
-      <item row="0" column="0">
-       <layout class="QGridLayout" name="gridLayout_4">
-        <item row="0" column="1">
-         <spacer name="horizontalSpacer_4">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeType">
-           <enum>QSizePolicy::Fixed</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>4</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item row="0" column="0">
-         <widget class="QLabel" name="labelCatalog">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="text">
-           <string>Catalog:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="2">
-         <widget class="QComboBox" name="comboBoxCatalog">
-          <property name="editable">
-           <bool>false</bool>
-          </property>
-          <property name="currentText">
-           <string>Add new catalog...</string>
-          </property>
-          <property name="maxVisibleItems">
-           <number>9</number>
-          </property>
-          <property name="placeholderText">
-           <string/>
-          </property>
-          <item>
-           <property name="text">
-            <string>Add new catalog...</string>
-           </property>
-          </item>
-         </widget>
-        </item>
-       </layout>
-      </item>
      </layout>
     </item>
    </layout>
@@ -317,6 +263,8 @@
     <property name="title">
      <string>File</string>
     </property>
+    <addaction name="actionOpen_Catalog"/>
+    <addaction name="separator"/>
     <addaction name="actionOptions"/>
     <addaction name="separator"/>
     <addaction name="actionImport"/>
@@ -334,7 +282,6 @@
     <property name="title">
      <string>Tools</string>
     </property>
-    <addaction name="actionManage_Catalogs"/>
     <addaction name="actionGenerate_HTML_Report"/>
    </widget>
    <addaction name="menuFile"/>
@@ -425,6 +372,11 @@
   <action name="actionDeleteAll">
    <property name="text">
     <string>Delete All</string>
+   </property>
+  </action>
+  <action name="actionOpen_Catalog">
+   <property name="text">
+    <string>Open Catalog...</string>
    </property>
   </action>
  </widget>
