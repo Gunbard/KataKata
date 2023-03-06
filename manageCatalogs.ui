@@ -55,22 +55,6 @@
      <property name="sortingEnabled">
       <bool>false</bool>
      </property>
-     <item>
-      <property name="text">
-       <string>PS2 Games</string>
-      </property>
-      <property name="flags">
-       <set>ItemIsSelectable|ItemIsEditable|ItemIsDragEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Nendoroids</string>
-      </property>
-      <property name="flags">
-       <set>ItemIsSelectable|ItemIsEditable|ItemIsDragEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
-      </property>
-     </item>
     </widget>
    </item>
    <item row="0" column="1">

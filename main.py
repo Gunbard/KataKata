@@ -1,7 +1,6 @@
 # KataKata
 # Author: Gunbard
 
-import json
 import os
 import sys
 import asyncio
@@ -9,7 +8,7 @@ import qasync
 from mainWindow import Ui_MainWindow
 from enum import Enum
 from PyQt5 import QtCore, QtWidgets
-from PyQt5.QtWidgets import QTableWidgetItem, QLabel, QMenu
+from PyQt5.QtWidgets import QTableWidgetItem, QLabel, QMenu, QListWidgetItem
 from pyqtspinner import WaitingSpinner
 from retrievers.upcDataRetriever import UpcDataRetriever
 from models.itemModel import ItemModel
@@ -30,7 +29,7 @@ class TableColumns(Enum):
   NOTE = 4
 
 
-categoryData = []
+catalogData = []
 
 # APP SETUP
 
@@ -56,10 +55,10 @@ MainWindow.show()
 def updateTable():
   ui.tableData.setRowCount(0)
 
-  for item in categoryData:
+  for item in catalogData:
     addItem(item)
 
-  ui.statusBar.showMessage("{} item(s) in [category]".format(ui.tableData.rowCount()))
+  ui.statusBar.showMessage("{} item(s) in [catalog]".format(ui.tableData.rowCount()))
 
 def addItem(item):
   table = ui.tableData
@@ -85,14 +84,14 @@ def addItem(item):
 def refreshSelection(selections):
   retriever = UpcDataRetriever()
   for index in selections:
-    item = categoryData[index.row()]
+    item = catalogData[index.row()]
     if item:
       retriever.refresh(item)
   updateTable()
 
 def deleteSelection(selections):
   for index in selections:
-    del categoryData[index.row()]
+    del catalogData[index.row()]
   updateTable()
 
 def addUpc():
@@ -105,7 +104,7 @@ def addUpc():
   if ui.checkBoxAutorefreshUPC.isChecked():
     UpcDataRetriever().refresh(newItem)
 
-  categoryData.append(newItem)
+  catalogData.append(newItem)
   updateTable()
 
   ui.lineEditAddUPC.clear()
@@ -132,17 +131,42 @@ def importFromFile():
     return
   fileHandle = open(path[0])
   for line in fileHandle:
-      categoryData.append(ItemModel(None, None, None, line.strip(), None))
+      catalogData.append(ItemModel(None, None, None, line.strip(), None))
   updateTable()
+
+def manageCatalogsClosed(event):
+  print('closed')
 
 def showManageCatalogs():
   if not ManageCatalogsWindow.isVisible():
+    ManageCatalogsWindow.closeEvent = manageCatalogsClosed
     ManageCatalogsWindow.show()
+
+def catalogComboBoxSelected():
+  if ui.comboBoxCatalog.count() == 1:
+    showManageCatalogs()
+
+def newCatalog():
+  newItem = QListWidgetItem('New catalog')
+  manageCatalogsUi.catalogList.addItem(newItem)
+  newItem.setFlags(newItem.flags() | QtCore.Qt.ItemIsEditable)
+  newItem.setSelected(True)
+  manageCatalogsUi.catalogList.editItem(newItem)
+
+def removeCatalog():
+  # TODO: Add confirm dialog
+  list = manageCatalogsUi.catalogList
+  selectedItems = list.selectedItems()
+  if len(selectedItems) > 0:
+   list.takeItem(list.row(selectedItems[0]))
 
 # EVENTS
 ui.buttonAddUPC.clicked.connect(addUpc)
 ui.lineEditAddUPC.returnPressed.connect(addUpc)
 ui.tableData.customContextMenuRequested.connect(tableContextMenu)
+ui.comboBoxCatalog.activated.connect(catalogComboBoxSelected)
+manageCatalogsUi.buttonNewCatalog.clicked.connect(newCatalog)
+manageCatalogsUi.buttonRemoveCatalog.clicked.connect(removeCatalog)
 ui.actionImport.triggered.connect(importFromFile)
 ui.actionManage_Catalogs.triggered.connect(showManageCatalogs)
 ui.actionQuit.triggered.connect(lambda: app.quit())
