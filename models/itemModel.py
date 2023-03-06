@@ -38,6 +38,8 @@ class ItemModelJSONDecoder(JSONDecoder):
 
   def object_hook(self, obj):
     item = ItemModel(obj['name'], obj['description'], obj['image_url'], obj['upc'], obj['note'])
+    if not obj['image']:
+      return item
     pixmap = QPixmap()
     pixmap.loadFromData(base64.b64decode(obj['image']))
     item.image = pixmap

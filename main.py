@@ -49,10 +49,12 @@ MainWindow.show()
 
 def updateTable():
   global currentCatalog
+
   ui.tableData.setRowCount(0)
 
-  for item in currentCatalog.data:
-    addItem(item)
+  if currentCatalog.data:
+    for item in currentCatalog.data:
+      addItem(item)
 
   ui.statusBar.showMessage("{} item(s) in [catalog]".format(ui.tableData.rowCount()))
 
@@ -60,37 +62,48 @@ def addItem(item):
   table = ui.tableData
   table.setRowCount(table.rowCount() + 1)
   lastRow = table.rowCount() - 1
-  table.setItem(lastRow, TableColumns.UPC.value, QTableWidgetItem(item.upc))
+  updateItemInRow(item, lastRow)
+
+def updateItemInRow(item, row):
+  table = ui.tableData
+  table.setItem(row, TableColumns.UPC.value, QTableWidgetItem(item.upc))
 
   itemName = QTableWidgetItem(item.name)
   itemName.setToolTip(item.name)
-  table.setItem(lastRow, TableColumns.NAME.value, itemName)
+  table.setItem(row, TableColumns.NAME.value, itemName)
 
   descriptionItem = QTableWidgetItem(item.description)
   descriptionItem.setToolTip(item.description)
-  table.setItem(lastRow, TableColumns.DESCRIPTION.value, descriptionItem)
+  table.setItem(row, TableColumns.DESCRIPTION.value, descriptionItem)
 
   newLabel = QLabel()
   newLabel.setAlignment(QtCore.Qt.AlignCenter)
   if item.image:
     newLabel.setPixmap(item.image)
 
-  table.setCellWidget(lastRow, TableColumns.IMAGE.value, newLabel)
+  table.setCellWidget(row, TableColumns.IMAGE.value, newLabel)
 
 def refreshSelection(selections):
+  global currentCatalog
+
   retriever = UpcDataRetriever()
   for index in selections:
     item = currentCatalog.data[index.row()]
     if item:
       retriever.refresh(item)
-  updateTable()
+      updateItemInRow(item, index.row())
+      return
 
 def deleteSelection(selections):
+  global currentCatalog
+
   for index in selections:
     del currentCatalog.data[index.row()]
   updateTable()
 
 def addUpc():
+  global currentCatalog
+
   upc = ui.lineEditAddUPC.text()
   if not upc:
     return
@@ -121,6 +134,8 @@ def tableContextMenu(position):
     deleteSelection(selection)
 
 def importFromFile():
+  global currentCatalog
+
   path = QtWidgets.QFileDialog.getOpenFileName(None, "Select file with list of UPCs...", os.curdir, \
         "All files (*.*)")
   if not path[0]:
@@ -130,9 +145,14 @@ def importFromFile():
       currentCatalog.data.append(ItemModel(None, None, None, line.strip(), None))
   updateTable()
 
+def newCatalog():
+  global currentCatalog
+  currentCatalog = CatalogModel(None, None)
+  updateTable()
+
 def openCatalog():
   global currentCatalog
-  
+
   path = QtWidgets.QFileDialog.getOpenFileName(None, "Select a catalog file...", os.curdir, \
         "Catalog file (*.json);;All files (*.*)")
   currentCatalog = CatalogModel(None, path[0])
@@ -147,12 +167,14 @@ def saveCatalog(forceSave):
     if not savePath:
       return
     currentCatalog = CatalogModel(currentCatalog.data, savePath[0])
-    currentCatalog.save()
+
+  currentCatalog.save()
 
 # EVENTS
 ui.buttonAddUPC.clicked.connect(addUpc)
 ui.lineEditAddUPC.returnPressed.connect(addUpc)
 ui.tableData.customContextMenuRequested.connect(tableContextMenu)
+ui.actionNew_Catalog.triggered.connect(newCatalog)
 ui.actionOpen_Catalog.triggered.connect(openCatalog)
 ui.actionSave_Catalog.triggered.connect(saveCatalog)
 ui.actionSave_Catalog_As.triggered.connect(lambda: saveCatalog(True))
