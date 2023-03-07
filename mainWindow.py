@@ -190,7 +190,7 @@ class Ui_MainWindow(object):
         self.checkBoxAutorefreshUPC.setText(_translate("MainWindow", "Auto-refresh newly added UPCs"))
         self.buttonAddUPC.setText(_translate("MainWindow", "+"))
         self.labelAddUPC.setText(_translate("MainWindow", "Add UPC: "))
-        self.tableData.setSortingEnabled(True)
+        self.tableData.setSortingEnabled(False)
         item = self.tableData.horizontalHeaderItem(0)
         item.setText(_translate("MainWindow", "Name"))
         item = self.tableData.horizontalHeaderItem(1)
