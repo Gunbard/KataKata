@@ -95,6 +95,9 @@ def updateItemInRow(item, row):
 
   table.setCellWidget(row, TableColumns.IMAGE.value, newLabel)
 
+  noteItem = QTableWidgetItem(item.note)
+  table.setItem(row, TableColumns.NOTE.value, noteItem)
+
 def refreshSelection(selections):
   global currentCatalog
 
@@ -188,10 +191,22 @@ def saveCatalog(forceSave):
   ui.actionSave_Catalog.setEnabled(False)
   updateTitle()
 
+def itemUpdated(topLeft, bottomRight, roles):
+  global currentCatalog
+
+  for role in roles:
+    if role == QtCore.Qt.ItemDataRole.EditRole and topLeft.column() == TableColumns.NOTE.value:
+      newText = ui.tableData.model().data(topLeft)
+      item = currentCatalog.data[topLeft.row()]
+      item.note = newText
+      ui.actionSave_Catalog.setEnabled(True)
+      updateTitle()
+
 # EVENTS
 ui.buttonAddUPC.clicked.connect(addUpc)
 ui.lineEditAddUPC.returnPressed.connect(addUpc)
 ui.tableData.customContextMenuRequested.connect(tableContextMenu)
+ui.tableData.model().dataChanged.connect(itemUpdated)
 ui.actionNew_Catalog.triggered.connect(newCatalog)
 ui.actionOpen_Catalog.triggered.connect(openCatalog)
 ui.actionSave_Catalog.triggered.connect(saveCatalog)
