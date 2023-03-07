@@ -160,6 +160,7 @@ class Ui_MainWindow(object):
         self.actionNew_Catalog = QtWidgets.QAction(MainWindow)
         self.actionNew_Catalog.setObjectName("actionNew_Catalog")
         self.actionSave_Catalog = QtWidgets.QAction(MainWindow)
+        self.actionSave_Catalog.setEnabled(False)
         self.actionSave_Catalog.setObjectName("actionSave_Catalog")
         self.actionSave_Catalog_As = QtWidgets.QAction(MainWindow)
         self.actionSave_Catalog_As.setObjectName("actionSave_Catalog_As")

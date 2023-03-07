@@ -1,4 +1,5 @@
 import json
+import os
 from models.itemModel import ItemModelJSONEncoder, ItemModelJSONDecoder
 
 class CatalogModel:
@@ -8,6 +9,12 @@ class CatalogModel:
 
     # String path to the save file
     self.filepath = filepath
+
+  def getTitle(self):
+    if self.filepath:
+      return os.path.splitext(os.path.basename(self.filepath))[0]
+    else:
+      return ''
 
   def save(self):
     if not self.filepath or not self.data:

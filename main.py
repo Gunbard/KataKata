@@ -47,6 +47,17 @@ ui.setupUi(MainWindow)
 MainWindow.setWindowTitle(WINDOW_TITLE)
 MainWindow.show()
 
+def updateTitle():
+  global currentCatalog
+
+  if ui.tableData.rowCount() == 0:
+    MainWindow.setWindowTitle(WINDOW_TITLE)
+    return
+
+  unsavedIndicator = '*' if ui.actionSave_Catalog.isEnabled() else ''
+  MainWindow.setWindowTitle("{} - {}{}".format(
+    WINDOW_TITLE, currentCatalog.getTitle(), unsavedIndicator))
+
 def updateTable():
   global currentCatalog
 
@@ -56,7 +67,8 @@ def updateTable():
     for item in currentCatalog.data:
       addItem(item)
 
-  ui.statusBar.showMessage("{} item(s) in [catalog]".format(ui.tableData.rowCount()))
+  ui.statusBar.showMessage("{} item(s) in [{}]".format(ui.tableData.rowCount(), currentCatalog.getTitle()))
+  updateTitle()
 
 def addItem(item):
   table = ui.tableData
@@ -92,6 +104,8 @@ def refreshSelection(selections):
     if item:
       retriever.refresh(item)
       updateItemInRow(item, index.row())
+      ui.actionSave_Catalog.setEnabled(True)
+      updateTitle()
       return
 
 def deleteSelection(selections):
@@ -103,7 +117,7 @@ def deleteSelection(selections):
 
 def addUpc():
   global currentCatalog
-
+  
   upc = ui.lineEditAddUPC.text()
   if not upc:
     return
@@ -114,6 +128,7 @@ def addUpc():
     UpcDataRetriever().refresh(newItem)
 
   currentCatalog.data.append(newItem)
+  ui.actionSave_Catalog.setEnabled(True)
   updateTable()
 
   ui.lineEditAddUPC.clear()
@@ -161,6 +176,7 @@ def openCatalog():
 
 def saveCatalog(forceSave):
   global currentCatalog
+
   if forceSave or not currentCatalog:
     savePath = QtWidgets.QFileDialog.getSaveFileName(None, "Save catalog...", os.curdir, \
     "Catalog file (*.json);;All files (*.*)")
@@ -169,6 +185,8 @@ def saveCatalog(forceSave):
     currentCatalog = CatalogModel(currentCatalog.data, savePath[0])
 
   currentCatalog.save()
+  ui.actionSave_Catalog.setEnabled(False)
+  updateTitle()
 
 # EVENTS
 ui.buttonAddUPC.clicked.connect(addUpc)
