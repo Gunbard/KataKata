@@ -241,7 +241,14 @@ def quitApp():
   if checkUnsavedChanges():
     app.quit()
 
+def appClose(event):
+  if checkUnsavedChanges():
+    event.accept()
+  else:
+    event.ignore()
+
 # EVENTS
+MainWindow.closeEvent = lambda event: appClose(event)
 ui.buttonAddUPC.clicked.connect(addUpc)
 ui.lineEditAddUPC.returnPressed.connect(addUpc)
 ui.tableData.customContextMenuRequested.connect(tableContextMenu)
