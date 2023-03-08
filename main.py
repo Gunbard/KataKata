@@ -8,7 +8,7 @@ import qasync
 from mainWindow import Ui_MainWindow
 from enum import Enum
 from PyQt5 import QtCore, QtWidgets
-from PyQt5.QtWidgets import QTableWidgetItem, QLabel, QMenu
+from PyQt5.QtWidgets import QTableWidgetItem, QLabel, QMenu, QMessageBox
 from pyqtspinner import WaitingSpinner
 from retrievers.upcDataRetriever import UpcDataRetriever
 from models.catalogModel import CatalogModel
@@ -114,9 +114,16 @@ def refreshSelection(selections):
 def deleteSelection(selections):
   global currentCatalog
 
-  for index in selections:
-    del currentCatalog.data[index.row()]
-  updateTable()
+  answer = QMessageBox().question(MainWindow, \
+    'Delete Item', \
+    "Are you sure you want to delete this row?", \
+    QMessageBox.Ok | QMessageBox.Cancel, \
+    QMessageBox.Cancel)
+  if answer == QMessageBox.Ok:
+    for index in selections:
+      del currentCatalog.data[index.row()]
+      ui.actionSave_Catalog.setEnabled(True)
+      updateTable()
 
 def addUpc():
   global currentCatalog
@@ -154,6 +161,9 @@ def tableContextMenu(position):
 def importFromFile():
   global currentCatalog
 
+  if not checkUnsavedChanges():
+    return
+
   path = QtWidgets.QFileDialog.getOpenFileName(None, "Select file with list of UPCs...", os.curdir, \
         "All files (*.*)")
   if not path[0]:
@@ -165,11 +175,18 @@ def importFromFile():
 
 def newCatalog():
   global currentCatalog
+
+  if not checkUnsavedChanges():
+    return
+
   currentCatalog = CatalogModel(None, None)
   updateTable()
 
 def openCatalog():
   global currentCatalog
+
+  if not checkUnsavedChanges():
+    return
 
   path = QtWidgets.QFileDialog.getOpenFileName(None, "Select a catalog file...", os.curdir, \
         "Catalog file (*.json);;All files (*.*)")
@@ -202,6 +219,28 @@ def itemUpdated(topLeft, bottomRight, roles):
       ui.actionSave_Catalog.setEnabled(True)
       updateTitle()
 
+def checkUnsavedChanges():
+  if not ui.actionSave_Catalog.isEnabled():
+    return True
+
+  answer = QMessageBox().question(MainWindow, \
+  'Unsaved Changes', \
+  "Save changes?", \
+  QMessageBox.Save | QMessageBox.Discard | QMessageBox.Cancel, \
+  QMessageBox.Cancel)
+
+  if answer == QMessageBox.Save:
+    ui.actionSave_Catalog.trigger()
+    return True
+  elif answer == QMessageBox.Discard:
+    return True
+  else:
+    return False
+
+def quitApp():
+  if checkUnsavedChanges():
+    app.quit()
+
 # EVENTS
 ui.buttonAddUPC.clicked.connect(addUpc)
 ui.lineEditAddUPC.returnPressed.connect(addUpc)
@@ -212,7 +251,7 @@ ui.actionOpen_Catalog.triggered.connect(openCatalog)
 ui.actionSave_Catalog.triggered.connect(saveCatalog)
 ui.actionSave_Catalog_As.triggered.connect(lambda: saveCatalog(True))
 ui.actionImport.triggered.connect(importFromFile)
-ui.actionQuit.triggered.connect(lambda: app.quit())
+ui.actionQuit.triggered.connect(quitApp)
 
 # spinner = WaitingSpinner(ui.tableData, True, True, QtCore.Qt.ApplicationModal)
 # spinner.start() # starts spinning
