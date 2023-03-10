@@ -163,6 +163,7 @@ def moveRow(up, selection):
   updateItemInRow(currentCatalog.data[row], row)
   updateItemInRow(currentCatalog.data[targetRow], targetRow)
   ui.tableData.selectRow(targetRow)
+  updateTitle()
 
 def tableContextMenu(position):
   selection = ui.tableData.selectionModel().selectedRows()
@@ -280,6 +281,10 @@ def appClose(event):
   else:
     event.ignore()
 
+def showAbout():
+  QMessageBox.about(MainWindow, 'About', 'Written with olev by: Gunbard<br>\
+  GitHub: <a href="https://github.com/Gunbard/KataKata">https://github.com/Gunbard/KataKata</a>')
+
 # EVENTS
 MainWindow.closeEvent = lambda event: appClose(event)
 ui.buttonAddUPC.clicked.connect(addUpc)
@@ -292,6 +297,7 @@ ui.actionSave_Catalog.triggered.connect(saveCatalog)
 ui.actionSave_Catalog_As.triggered.connect(lambda: saveCatalog(True))
 ui.actionImport.triggered.connect(importFromFile)
 ui.actionQuit.triggered.connect(quitApp)
+ui.actionAbout.triggered.connect(showAbout)
 
 # spinner = WaitingSpinner(ui.tableData, True, True, QtCore.Qt.ApplicationModal)
 # spinner.start() # starts spinning

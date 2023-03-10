@@ -221,4 +221,6 @@ class Ui_MainWindow(object):
         self.actionOpen_Catalog.setText(_translate("MainWindow", "Open Catalog..."))
         self.actionNew_Catalog.setText(_translate("MainWindow", "New Catalog"))
         self.actionSave_Catalog.setText(_translate("MainWindow", "Save Catalog"))
+        self.actionSave_Catalog.setShortcut(_translate("MainWindow", "Ctrl+S"))
         self.actionSave_Catalog_As.setText(_translate("MainWindow", "Save Catalog As..."))
+        self.actionSave_Catalog_As.setShortcut(_translate("MainWindow", "Ctrl+Shift+S"))
