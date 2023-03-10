@@ -124,6 +124,7 @@ def deleteSelection(selections):
       del currentCatalog.data[index.row()]
       ui.actionSave_Catalog.setEnabled(True)
       updateTable()
+      return
 
 def addUpc():
   global currentCatalog
@@ -143,19 +144,50 @@ def addUpc():
 
   ui.lineEditAddUPC.clear()
 
+def moveRow(up, selection):
+  global currentCatalog
+
+  row = selection[0].row()
+  direction = -1 if up == True else 1
+
+  if up == True and row == 0:
+    return
+  elif up == False and row == ui.tableData.rowCount() - 1:
+    return
+
+  targetRow = row + (1 * direction)
+
+  currentCatalog.data[row], currentCatalog.data[targetRow] = currentCatalog.data[targetRow], currentCatalog.data[row]
+    
+  ui.actionSave_Catalog.setEnabled(True)
+  updateItemInRow(currentCatalog.data[row], row)
+  updateItemInRow(currentCatalog.data[targetRow], targetRow)
+
 def tableContextMenu(position):
-  if ui.tableData.rowCount() == 0:
+  selection = ui.tableData.selectionModel().selectedRows()
+  rowCount = ui.tableData.rowCount()
+  if rowCount == 0:
     return
   menu = QMenu()
+  moveUpAction = menu.addAction("Move Up")
+  if selection[0].row() == 0:
+    moveUpAction.setEnabled(False)
+  moveDownAction = menu.addAction("Move Down")
+  if selection[0].row() == rowCount - 1:
+    moveDownAction.setEnabled(False)
+  menu.addSeparator()
   refreshAction = menu.addAction("Refresh")
   menu.addSeparator()
   deleteAction = menu.addAction("Delete")
 
   action = menu.exec_(ui.tableData.mapToGlobal(position))
-  selection = ui.tableData.selectionModel().selectedRows()
-  if action == refreshAction:
+  if action == moveUpAction:
+    moveRow(True, selection)
+  elif action == moveDownAction:
+    moveRow(False, selection)
+  elif action == refreshAction:
     refreshSelection(selection)
-  if action == deleteAction:
+  elif action == deleteAction:
     deleteSelection(selection)
 
 def importFromFile():

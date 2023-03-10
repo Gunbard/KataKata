@@ -268,10 +268,7 @@
     <addaction name="actionSave_Catalog"/>
     <addaction name="actionSave_Catalog_As"/>
     <addaction name="separator"/>
-    <addaction name="actionOptions"/>
-    <addaction name="separator"/>
     <addaction name="actionImport"/>
-    <addaction name="actionExport_to_CSV_2"/>
     <addaction name="separator"/>
     <addaction name="actionQuit"/>
    </widget>
