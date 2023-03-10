@@ -162,6 +162,7 @@ def moveRow(up, selection):
   ui.actionSave_Catalog.setEnabled(True)
   updateItemInRow(currentCatalog.data[row], row)
   updateItemInRow(currentCatalog.data[targetRow], targetRow)
+  ui.tableData.selectRow(targetRow)
 
 def tableContextMenu(position):
   selection = ui.tableData.selectionModel().selectedRows()
