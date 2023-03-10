@@ -27,7 +27,6 @@ class CatalogModel:
 
   def load(self):
     if not self.filepath:
-      print('Error: No file to load!')
       return
 
     file = open(self.filepath, 'r')

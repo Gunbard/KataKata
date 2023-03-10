@@ -213,7 +213,7 @@ def newCatalog():
   if not checkUnsavedChanges():
     return
 
-  currentCatalog = CatalogModel(None, None)
+  currentCatalog = CatalogModel([], None)
   updateTable()
 
 def openCatalog():
@@ -231,10 +231,10 @@ def openCatalog():
 def saveCatalog(forceSave):
   global currentCatalog
 
-  if forceSave or not currentCatalog:
+  if forceSave or not currentCatalog or not currentCatalog.filepath:
     savePath = QtWidgets.QFileDialog.getSaveFileName(None, "Save catalog...", os.curdir, \
     "Catalog file (*.json);;All files (*.*)")
-    if not savePath:
+    if not savePath[0]:
       return
     currentCatalog = CatalogModel(currentCatalog.data, savePath[0])
 
@@ -246,10 +246,19 @@ def itemUpdated(topLeft, bottomRight, roles):
   global currentCatalog
 
   for role in roles:
-    if role == QtCore.Qt.ItemDataRole.EditRole and topLeft.column() == TableColumns.NOTE.value:
-      newText = ui.tableData.model().data(topLeft)
+    if role == QtCore.Qt.ItemDataRole.EditRole:
+      # Front-end is updated already so just need to update model
+      updatedData = ui.tableData.model().data(topLeft)
       item = currentCatalog.data[topLeft.row()]
-      item.note = newText
+      if topLeft.column() == TableColumns.NAME.value:
+        item.name = updatedData
+      elif topLeft.column() == TableColumns.DESCRIPTION.value:
+        item.description = updatedData
+      elif topLeft.column() == TableColumns.UPC.value:
+        item.upc = updatedData
+      elif topLeft.column() == TableColumns.NOTE.value:
+        item.note = updatedData
+
       ui.actionSave_Catalog.setEnabled(True)
       updateTitle()
 
