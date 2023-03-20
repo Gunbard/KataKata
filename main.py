@@ -15,11 +15,9 @@ from models.catalogModel import CatalogModel
 from models.itemModel import ItemModel
 
 APP_TITLE = 'KataKata'
-VERSION = '0.1.0'
+VERSION = '1.0.0'
 WINDOW_TITLE = "{} {}".format(APP_TITLE, VERSION)
-
 MAX_BATCH_SIZE = 1
-
 
 class TableColumns(Enum):
   NAME = 0
@@ -291,8 +289,11 @@ def appClose(event):
     event.ignore()
 
 def showAbout():
-  QMessageBox.about(MainWindow, 'About', 'Written with olev by: Gunbard<br>\
-  GitHub: <a href="https://github.com/Gunbard/KataKata">https://github.com/Gunbard/KataKata</a>')
+  QMessageBox.about(MainWindow, 'About', 'KataKata {}<br>Written with olev by: Gunbard<br>\
+  GitHub: <a href="https://github.com/Gunbard/KataKata">https://github.com/Gunbard/KataKata</a>'.format(VERSION))
+
+def generateReport():
+  pass
 
 # EVENTS
 MainWindow.closeEvent = lambda event: appClose(event)
@@ -306,7 +307,11 @@ ui.actionSave_Catalog.triggered.connect(saveCatalog)
 ui.actionSave_Catalog_As.triggered.connect(lambda: saveCatalog(True))
 ui.actionImport.triggered.connect(importFromFile)
 ui.actionQuit.triggered.connect(quitApp)
+ui.actionGenerate_HTML_Report.triggered.connect(generateReport)
 ui.actionAbout.triggered.connect(showAbout)
+
+# TODO: Implement HTML report generation
+ui.menuTools.menuAction().setVisible(False)
 
 # spinner = WaitingSpinner(ui.tableData, True, True, QtCore.Qt.ApplicationModal)
 # spinner.start() # starts spinning
