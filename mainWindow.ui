@@ -283,7 +283,6 @@
      <string>Tools</string>
     </property>
     <addaction name="actionGenerate_HTML_Report"/>
-    <addaction name="separator"/>
     <addaction name="actionRefreshAllNew"/>
    </widget>
    <addaction name="menuFile"/>

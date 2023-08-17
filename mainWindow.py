@@ -175,7 +175,6 @@ class Ui_MainWindow(object):
         self.menuFile.addAction(self.actionQuit)
         self.menuHelp.addAction(self.actionAbout)
         self.menuTools.addAction(self.actionGenerate_HTML_Report)
-        self.menuTools.addSeparator()
         self.menuTools.addAction(self.actionRefreshAllNew)
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuTools.menuAction())

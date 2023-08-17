@@ -366,7 +366,7 @@ ui.actionRefreshAllNew.triggered.connect(lambda: refreshAll(True))
 ui.actionAbout.triggered.connect(showAbout)
 
 # TODO: Implement HTML report generation
-#ui.menuTools.menuAction().setVisible(False)
+ui.actionGenerate_HTML_Report.setVisible(False)
 
 # spinner = WaitingSpinner(ui.tableData, True, True, QtCore.Qt.ApplicationModal)
 # spinner.start() # starts spinning
