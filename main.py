@@ -5,7 +5,9 @@ import os
 import sys
 import asyncio
 import qasync
+import time
 from mainWindow import Ui_MainWindow
+from refreshDialog import Ui_RefreshDialog
 from enum import Enum
 from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtWidgets import QTableWidgetItem, QLabel, QMenu, QMessageBox
@@ -42,14 +44,20 @@ MainWindow = QtWidgets.QMainWindow()
 ui = Ui_MainWindow()
 ui.setupUi(MainWindow)
 
-MainWindow.setWindowTitle(WINDOW_TITLE)
+RefreshDialog = QtWidgets.QDialog(MainWindow)
+refreshDialog = Ui_RefreshDialog()
+refreshDialog.setupUi(RefreshDialog)
+
+MainWindow.setWindowTitle("{} - {}".format(
+    WINDOW_TITLE, "New Catalog"))
 MainWindow.show()
 
 def updateTitle():
   global currentCatalog
 
   if ui.tableData.rowCount() == 0:
-    MainWindow.setWindowTitle(WINDOW_TITLE)
+    MainWindow.setWindowTitle("{} - {}".format(
+    WINDOW_TITLE, "New Catalog"))
     return
 
   unsavedIndicator = '*' if ui.actionSave_Catalog.isEnabled() else ''
@@ -95,6 +103,42 @@ def updateItemInRow(item, row):
 
   noteItem = QTableWidgetItem(item.note)
   table.setItem(row, TableColumns.NOTE.value, noteItem)
+
+def refreshAll(newOnly):
+  global currentCatalog
+
+  if currentCatalog == None or not currentCatalog.data:
+    return
+  
+  itemsToRefresh = list(filter(lambda item: item.name == None, currentCatalog.data))
+
+  if not itemsToRefresh:
+    return
+
+  progressBar = refreshDialog.refreshProgressBar
+  progressBar.setValue(0)
+  progressBar.setMaximum(len(itemsToRefresh) - 1)
+
+  RefreshDialog.show()
+
+  retriever = UpcDataRetriever()
+
+  # TODO: Use a thread
+
+  for index, item in enumerate(itemsToRefresh):
+    retriever.refresh(item)
+    progressBar.setValue(index)
+    updateItemInRow(item, index)
+    progressBar.repaint()
+    ui.tableData.repaint()
+    time.sleep(2)
+  
+  ui.actionSave_Catalog.setEnabled(True)
+  updateTitle()
+
+
+def refreshDialogClosed(event):
+  print("Refresh dialog closed")
 
 def refreshSelection(selections):
   global currentCatalog
@@ -297,6 +341,7 @@ def generateReport():
 
 # EVENTS
 MainWindow.closeEvent = lambda event: appClose(event)
+RefreshDialog.closeEvent = lambda event: refreshDialogClosed(event)
 ui.buttonAddUPC.clicked.connect(addUpc)
 ui.lineEditAddUPC.returnPressed.connect(addUpc)
 ui.tableData.customContextMenuRequested.connect(tableContextMenu)
@@ -308,10 +353,11 @@ ui.actionSave_Catalog_As.triggered.connect(lambda: saveCatalog(True))
 ui.actionImport.triggered.connect(importFromFile)
 ui.actionQuit.triggered.connect(quitApp)
 ui.actionGenerate_HTML_Report.triggered.connect(generateReport)
+ui.actionRefreshAllNew.triggered.connect(lambda: refreshAll(True))
 ui.actionAbout.triggered.connect(showAbout)
 
 # TODO: Implement HTML report generation
-ui.menuTools.menuAction().setVisible(False)
+#ui.menuTools.menuAction().setVisible(False)
 
 # spinner = WaitingSpinner(ui.tableData, True, True, QtCore.Qt.ApplicationModal)
 # spinner.start() # starts spinning

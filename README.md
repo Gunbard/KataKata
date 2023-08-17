@@ -17,7 +17,7 @@ pip install -r requirements.in
 
 ### (Re)compiling the UI
 ```sh
-pyuic5 mainWindow.ui -o mainWindow.py
+pyuic5 mainWindow.ui -o mainWindow.py; pyuic5 refreshDialog.ui -o refreshDialog.py
 ```
 
 ### Running

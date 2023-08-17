@@ -253,7 +253,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>18</height>
+     <height>22</height>
     </rect>
    </property>
    <property name="nativeMenuBar">
@@ -283,6 +283,8 @@
      <string>Tools</string>
     </property>
     <addaction name="actionGenerate_HTML_Report"/>
+    <addaction name="separator"/>
+    <addaction name="actionRefreshAllNew"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuTools"/>
@@ -401,6 +403,11 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Shift+S</string>
+   </property>
+  </action>
+  <action name="actionRefreshAllNew">
+   <property name="text">
+    <string>Refresh All (New Entries Only)</string>
    </property>
   </action>
  </widget>
