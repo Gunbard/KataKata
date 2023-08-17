@@ -115,9 +115,14 @@ def refreshAll(newOnly):
   if not itemsToRefresh:
     return
 
+  itemRefreshCount = len(itemsToRefresh)
+
+  dialogTitle = RefreshDialog.windowTitle()
+  RefreshDialog.setWindowTitle(dialogTitle + ' - (1 / ' + str(itemRefreshCount) + ')')
+
   progressBar = refreshDialog.refreshProgressBar
   progressBar.setValue(0)
-  progressBar.setMaximum(len(itemsToRefresh) - 1)
+  progressBar.setMaximum(itemRefreshCount - 1)
 
   RefreshDialog.show()
 
@@ -129,9 +134,13 @@ def refreshAll(newOnly):
     retriever.refresh(item)
     progressBar.setValue(index)
     updateItemInRow(item, index)
-    progressBar.repaint()
-    ui.tableData.repaint()
+    RefreshDialog.setWindowTitle(dialogTitle + ' - (' + str(index + 1) + ' / ' + str(itemRefreshCount) + ')')
+    progressBar.update()
+    ui.tableData.update()
+    app.processEvents()
     time.sleep(2)
+
+  RefreshDialog.close()
   
   ui.actionSave_Catalog.setEnabled(True)
   updateTitle()
