@@ -11,13 +11,12 @@ from refreshDialog import Ui_RefreshDialog
 from enum import Enum
 from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtWidgets import QTableWidgetItem, QLabel, QMenu, QMessageBox
-from pyqtspinner import WaitingSpinner
 from retrievers.upcDataRetriever import UpcDataRetriever
 from models.catalogModel import CatalogModel
 from models.itemModel import ItemModel
 
 APP_TITLE = 'KataKata'
-VERSION = '1.1.0'
+VERSION = '1.2.0'
 WINDOW_TITLE = "{} {}".format(APP_TITLE, VERSION)
 MAX_BATCH_SIZE = 1
 
@@ -97,7 +96,7 @@ def updateItemInRow(item, row):
   newLabel = QLabel()
   newLabel.setAlignment(QtCore.Qt.AlignCenter)
   if item.image:
-    newLabel.setPixmap(item.image)
+    newLabel.setPixmap(item.imageThumbnail())
 
   table.setCellWidget(row, TableColumns.IMAGE.value, newLabel)
 
@@ -110,7 +109,7 @@ def refreshAll(newOnly):
   if currentCatalog == None or not currentCatalog.data:
     return
   
-  itemsToRefresh = list(filter(lambda item: item.name == None, currentCatalog.data))
+  itemsToRefresh = list(filter(lambda item: item.name == None, currentCatalog.data)) if newOnly == True else currentCatalog.data
 
   if not itemsToRefresh:
     return
@@ -118,7 +117,7 @@ def refreshAll(newOnly):
   itemRefreshCount = len(itemsToRefresh)
 
   dialogTitle = RefreshDialog.windowTitle()
-  RefreshDialog.setWindowTitle(dialogTitle + ' - (1 / ' + str(itemRefreshCount) + ')')
+  RefreshDialog.setWindowTitle(dialogTitle + ' (1 / ' + str(itemRefreshCount) + ')')
 
   progressBar = refreshDialog.refreshProgressBar
   progressBar.setValue(0)
@@ -135,11 +134,13 @@ def refreshAll(newOnly):
       break
     retriever.refresh(item)
     progressBar.setValue(index)
-    RefreshDialog.setWindowTitle(dialogTitle + ' - (' + str(index + 1) + ' / ' + str(itemRefreshCount) + ')')
+    RefreshDialog.setWindowTitle(dialogTitle + ' (' + str(index + 1) + ' / ' + str(itemRefreshCount) + ')')
     progressBar.update()
     app.processEvents()
     time.sleep(2)
 
+  # Reset title
+  RefreshDialog.setWindowTitle(dialogTitle)
   RefreshDialog.close()
   
   ui.actionSave_Catalog.setEnabled(True)
@@ -363,14 +364,12 @@ ui.actionSave_Catalog_As.triggered.connect(lambda: saveCatalog(True))
 ui.actionImport.triggered.connect(importFromFile)
 ui.actionQuit.triggered.connect(quitApp)
 ui.actionGenerate_HTML_Report.triggered.connect(generateReport)
+ui.actionRefreshAll.triggered.connect(lambda: refreshAll(False))
 ui.actionRefreshAllNew.triggered.connect(lambda: refreshAll(True))
 ui.actionAbout.triggered.connect(showAbout)
 
 # TODO: Implement HTML report generation
 ui.actionGenerate_HTML_Report.setVisible(False)
-
-# spinner = WaitingSpinner(ui.tableData, True, True, QtCore.Qt.ApplicationModal)
-# spinner.start() # starts spinning
 
 with loop:
   loop.run_forever()

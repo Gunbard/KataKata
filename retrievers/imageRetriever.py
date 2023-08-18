@@ -13,9 +13,5 @@ class ImageRetriever:
     response = requests.get(self.url, stream=True)
     pixmap = QPixmap()
     pixmap.loadFromData(response.raw.data)
-    pixmap = pixmap.scaled(64, \
-                        64, \
-                        QtCore.Qt.KeepAspectRatio, \
-                        QtCore.Qt.SmoothTransformation)
     return pixmap
     

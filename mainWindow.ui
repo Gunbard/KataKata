@@ -283,6 +283,7 @@
      <string>Tools</string>
     </property>
     <addaction name="actionGenerate_HTML_Report"/>
+    <addaction name="actionRefreshAll"/>
     <addaction name="actionRefreshAllNew"/>
    </widget>
    <addaction name="menuFile"/>
@@ -313,11 +314,6 @@
   <action name="actionAbout">
    <property name="text">
     <string>About</string>
-   </property>
-  </action>
-  <action name="actionRefresh_All">
-   <property name="text">
-    <string>Refresh All</string>
    </property>
   </action>
   <action name="actionDelete_Selected">
@@ -365,16 +361,6 @@
     <string>Delete All in Catalog</string>
    </property>
   </action>
-  <action name="actionRefreshAll">
-   <property name="text">
-    <string>RefreshAll</string>
-   </property>
-  </action>
-  <action name="actionDeleteAll">
-   <property name="text">
-    <string>Delete All</string>
-   </property>
-  </action>
   <action name="actionOpen_Catalog">
    <property name="text">
     <string>Open Catalog...</string>
@@ -407,6 +393,11 @@
   <action name="actionRefreshAllNew">
    <property name="text">
     <string>Refresh All (New Entries Only)</string>
+   </property>
+  </action>
+  <action name="actionRefreshAll">
+   <property name="text">
+    <string>Refresh All</string>
    </property>
   </action>
  </widget>

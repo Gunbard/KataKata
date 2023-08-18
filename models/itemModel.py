@@ -19,6 +19,14 @@ class ItemModel:
 
     self.image = ImageRetriever(self.image_url).get()
 
+  def imageThumbnail(self):
+    if not self.image:
+      return None
+    
+    return self.image.scaled(64, 64, \
+                        QtCore.Qt.KeepAspectRatio, \
+                        QtCore.Qt.SmoothTransformation)
+
 class ItemModelJSONEncoder(JSONEncoder):
   def default(self, obj):
     if isinstance(obj, ItemModel):
