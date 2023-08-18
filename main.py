@@ -131,12 +131,12 @@ def refreshAll(newOnly):
   # TODO: Use a thread
 
   for index, item in enumerate(itemsToRefresh):
+    if not RefreshDialog.isVisible():
+      break
     retriever.refresh(item)
     progressBar.setValue(index)
-    updateItemInRow(item, index)
     RefreshDialog.setWindowTitle(dialogTitle + ' - (' + str(index + 1) + ' / ' + str(itemRefreshCount) + ')')
     progressBar.update()
-    ui.tableData.update()
     app.processEvents()
     time.sleep(2)
 
@@ -144,6 +144,7 @@ def refreshAll(newOnly):
   
   ui.actionSave_Catalog.setEnabled(True)
   updateTitle()
+  updateTable()
 
 
 def refreshDialogClosed(event):
