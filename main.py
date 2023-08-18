@@ -245,6 +245,28 @@ def tableContextMenu(position):
   elif action == deleteAction:
     deleteSelection(selection)
 
+def tableItemDoubleClicked(row, column):
+  if not column == TableColumns.IMAGE.value:
+    return
+  
+  if not currentCatalog.data[row]:
+    return
+  
+  image = currentCatalog.data[row].image
+
+  if not image:
+    return
+  
+  newLabel = QtWidgets.QLabel()
+  newLabel.setPixmap(image)
+  newDialog = QtWidgets.QDialog()
+  newDialog.setWindowTitle("Image Viewer")
+  dialogLayout = QtWidgets.QGridLayout()
+  dialogLayout.addWidget(newLabel, 0, 0, QtCore.Qt.AlignCenter)
+  newDialog.setLayout(dialogLayout)
+  newDialog.exec()
+
+
 def importFromFile():
   global currentCatalog
 
@@ -357,6 +379,7 @@ ui.buttonAddUPC.clicked.connect(addUpc)
 ui.lineEditAddUPC.returnPressed.connect(addUpc)
 ui.tableData.customContextMenuRequested.connect(tableContextMenu)
 ui.tableData.model().dataChanged.connect(itemUpdated)
+ui.tableData.cellDoubleClicked.connect(lambda row, column: tableItemDoubleClicked(row, column))
 ui.actionNew_Catalog.triggered.connect(newCatalog)
 ui.actionOpen_Catalog.triggered.connect(openCatalog)
 ui.actionSave_Catalog.triggered.connect(saveCatalog)
