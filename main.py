@@ -160,7 +160,11 @@ def refreshSelection(selections):
   for index in selections:
     item = currentCatalog.data[index.row()]
     if item:
-      retriever.refresh(item)
+      status = retriever.refresh(item)
+      if status:
+        QMessageBox().warning(MainWindow, "Error", "Failed to refresh :/")
+        return
+
       updateItemInRow(item, index.row())
       ui.actionSave_Catalog.setEnabled(True)
       updateTitle()
