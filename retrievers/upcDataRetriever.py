@@ -12,7 +12,7 @@ class UpcDataRetriever:
     response = requests.get(self.RESOURCE_URL.format(item.upc))
     if not response.status_code == 200:
       print('UPC request failed!')
-      return None
+      return item.upc
 
     soup = BeautifulSoup(response.text, 'html.parser')
 
@@ -20,7 +20,7 @@ class UpcDataRetriever:
     title = title_element.text if title_element else None
 
     if not title:
-      return None
+      return item.upc
 
     image_url = soup.find('img')['src']
     description = soup.find('h2').parent.find('span').text.strip()

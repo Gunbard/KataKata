@@ -132,7 +132,9 @@ def refreshAll(newOnly):
   for index, item in enumerate(itemsToRefresh):
     if not RefreshDialog.isVisible():
       break
-    retriever.refresh(item)
+    status = retriever.refresh(item)
+    if status:
+      progressBar.setStyleSheet('color: red')
     progressBar.setValue(index)
     RefreshDialog.setWindowTitle(dialogTitle + ' (' + str(index + 1) + ' / ' + str(itemRefreshCount) + ')')
     progressBar.update()
