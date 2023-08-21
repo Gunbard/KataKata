@@ -2,7 +2,7 @@ import requests
 from PyQt5 import QtCore
 from PyQt5.QtGui import QPixmap
 
-MAX_IMAGE_DIMENSION = 1080
+MAX_IMAGE_DIMENSION = 960
 
 class ImageRetriever:
   def __init__(self, url):
@@ -15,6 +15,8 @@ class ImageRetriever:
     response = requests.get(self.url, stream=True)
     pixmap = QPixmap()
     pixmap.loadFromData(response.raw.data)
+
+    print('Image size: {}x{}'.format(pixmap.width(), pixmap.height()))
     
     # Limit image dimensions
     if pixmap.width() > MAX_IMAGE_DIMENSION or pixmap.height() > MAX_IMAGE_DIMENSION:

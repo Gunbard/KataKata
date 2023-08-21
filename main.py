@@ -305,6 +305,8 @@ def openCatalog():
 
   path = QtWidgets.QFileDialog.getOpenFileName(None, "Select a catalog file...", os.curdir, \
         "Catalog file (*.json);;All files (*.*)")
+  if not path[0]:
+    return
   currentCatalog = CatalogModel(None, path[0])
   currentCatalog.load()
   updateTable()
