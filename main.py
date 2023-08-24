@@ -73,11 +73,14 @@ def getItemByRow(row):
 def updateTable():
   global currentCatalog
 
+  ui.tableData.setSortingEnabled(False)
   ui.tableData.setRowCount(0)
 
   if currentCatalog.data:
     for item in currentCatalog.data:
       addItem(item)
+
+  ui.tableData.setSortingEnabled(True)
 
   ui.statusBar.showMessage("{} item(s) in [{}]".format(ui.tableData.rowCount(), currentCatalog.getTitle()))
   updateTitle()

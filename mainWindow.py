@@ -101,6 +101,7 @@ class Ui_MainWindow(object):
         self.tableData.horizontalHeader().setCascadingSectionResizes(False)
         self.tableData.horizontalHeader().setDefaultSectionSize(120)
         self.tableData.horizontalHeader().setHighlightSections(False)
+        self.tableData.horizontalHeader().setSortIndicatorShown(False)
         self.tableData.horizontalHeader().setStretchLastSection(True)
         self.tableData.verticalHeader().setVisible(True)
         self.tableData.verticalHeader().setDefaultSectionSize(64)
