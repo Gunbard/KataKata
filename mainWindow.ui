@@ -187,7 +187,7 @@
          <number>0</number>
         </property>
         <property name="columnCount">
-         <number>5</number>
+         <number>6</number>
         </property>
         <attribute name="horizontalHeaderVisible">
          <bool>true</bool>
@@ -239,6 +239,11 @@
         <column>
          <property name="text">
           <string>Note</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>UUID</string>
          </property>
         </column>
        </widget>

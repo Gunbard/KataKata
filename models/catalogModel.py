@@ -32,4 +32,9 @@ class CatalogModel:
     file = open(self.filepath, 'r')
     data = json.loads(file.read(), cls=ItemModelJSONDecoder)
     if data:
+      # Generate uuids if they're blank
+      for item in data:
+        if not item.uid:
+          item.generateUuid()
+
       self.data = data

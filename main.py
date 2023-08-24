@@ -16,7 +16,7 @@ from models.catalogModel import CatalogModel
 from models.itemModel import ItemModel
 
 APP_TITLE = 'KataKata'
-VERSION = '1.2.0'
+VERSION = '1.3.0'
 WINDOW_TITLE = "{} {}".format(APP_TITLE, VERSION)
 MAX_BATCH_SIZE = 1
 
@@ -26,6 +26,7 @@ class TableColumns(Enum):
   IMAGE = 2
   UPC = 3
   NOTE = 4
+  UUID = 5
 
 currentCatalog = CatalogModel([], None)
 
@@ -42,6 +43,7 @@ asyncio_semaphore = asyncio.Semaphore(MAX_BATCH_SIZE)
 MainWindow = QtWidgets.QMainWindow()
 ui = Ui_MainWindow()
 ui.setupUi(MainWindow)
+ui.tableData.hideColumn(TableColumns.UUID.value)
 
 RefreshDialog = QtWidgets.QDialog(MainWindow)
 refreshDialog = Ui_RefreshDialog()
@@ -62,6 +64,11 @@ def updateTitle():
   unsavedIndicator = '*' if ui.actionSave_Catalog.isEnabled() else ''
   MainWindow.setWindowTitle("{} - {}{}".format(
     WINDOW_TITLE, currentCatalog.getTitle(), unsavedIndicator))
+
+def getItemByRow(row):
+  index = ui.tableData.model().index(row, TableColumns.UUID.value)
+  uid = ui.tableData.model().data(index)
+  return next((item for item in currentCatalog.data if item.uid == uid), None)
 
 def updateTable():
   global currentCatalog
@@ -102,6 +109,9 @@ def updateItemInRow(item, row):
 
   noteItem = QTableWidgetItem(item.note)
   table.setItem(row, TableColumns.NOTE.value, noteItem)
+
+  uuidItem = QTableWidgetItem(item.uid)
+  table.setItem(row, TableColumns.UUID.value, uuidItem)
 
 def refreshAll(newOnly):
   global currentCatalog
@@ -158,7 +168,7 @@ def refreshSelection(selections):
 
   retriever = UpcDataRetriever()
   for index in selections:
-    item = currentCatalog.data[index.row()]
+    item = getItemByRow(index.row())
     if item:
       status = retriever.refresh(item)
       if status:
@@ -180,10 +190,12 @@ def deleteSelection(selections):
     QMessageBox.Cancel)
   if answer == QMessageBox.Ok:
     for index in selections:
-      del currentCatalog.data[index.row()]
-      ui.actionSave_Catalog.setEnabled(True)
-      updateTable()
-      return
+      item = getItemByRow(index.row())
+      if item:
+        currentCatalog.data.remove(item)
+        ui.actionSave_Catalog.setEnabled(True)
+        updateTable()
+        return
 
 def addUpc():
   global currentCatalog
@@ -192,7 +204,7 @@ def addUpc():
   if not upc:
     return
 
-  newItem = ItemModel(None, None, None, upc, None)
+  newItem = ItemModel(None, None, None, upc, None, None)
 
   if ui.checkBoxAutorefreshUPC.isChecked():
     UpcDataRetriever().refresh(newItem)
@@ -230,23 +242,23 @@ def tableContextMenu(position):
   if rowCount == 0:
     return
   menu = QMenu()
-  moveUpAction = menu.addAction("Move Up")
-  if selection[0].row() == 0:
-    moveUpAction.setEnabled(False)
-  moveDownAction = menu.addAction("Move Down")
-  if selection[0].row() == rowCount - 1:
-    moveDownAction.setEnabled(False)
-  menu.addSeparator()
+  #moveUpAction = menu.addAction("Move Up")
+  #if selection[0].row() == 0:
+  #  moveUpAction.setEnabled(False)
+  #moveDownAction = menu.addAction("Move Down")
+  #if selection[0].row() == rowCount - 1:
+  #  moveDownAction.setEnabled(False)
+  #menu.addSeparator()
   refreshAction = menu.addAction("Refresh")
   menu.addSeparator()
   deleteAction = menu.addAction("Delete")
 
   action = menu.exec_(ui.tableData.mapToGlobal(position))
-  if action == moveUpAction:
-    moveRow(True, selection)
-  elif action == moveDownAction:
-    moveRow(False, selection)
-  elif action == refreshAction:
+  # if action == moveUpAction:
+  #   moveRow(True, selection)
+  # elif action == moveDownAction:
+  #   moveRow(False, selection)
+  if action == refreshAction:
     refreshSelection(selection)
   elif action == deleteAction:
     deleteSelection(selection)
@@ -255,10 +267,12 @@ def tableItemDoubleClicked(row, column):
   if not column == TableColumns.IMAGE.value:
     return
   
-  if not currentCatalog.data[row]:
+  item = getItemByRow(row)
+
+  if not item:
     return
   
-  image = currentCatalog.data[row].image
+  image = item.image
 
   if not image:
     return
@@ -285,7 +299,7 @@ def importFromFile():
     return
   fileHandle = open(path[0])
   for line in fileHandle:
-      currentCatalog.data.append(ItemModel(None, None, None, line.strip(), None))
+      currentCatalog.data.append(ItemModel(None, None, None, line.strip(), None, None))
   updateTable()
 
 def newCatalog():
@@ -332,7 +346,7 @@ def itemUpdated(topLeft, bottomRight, roles):
     if role == QtCore.Qt.ItemDataRole.EditRole:
       # Front-end is updated already so just need to update model
       updatedData = ui.tableData.model().data(topLeft)
-      item = currentCatalog.data[topLeft.row()]
+      item = getItemByRow(topLeft.row())
       if topLeft.column() == TableColumns.NAME.value:
         item.name = updatedData
       elif topLeft.column() == TableColumns.DESCRIPTION.value:
