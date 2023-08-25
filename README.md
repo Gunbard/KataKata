@@ -9,6 +9,7 @@ Simple inventory/catalog management system for collecting crap
 - Save as a .txt file and share directly to Google Drive
 - Import into KataKata and save as a new catalog (PS1 games, Nendoroids, etc.)
 - Refresh All and repeat if UPC data source times out
+
 Keep catalog .json files in Google Drive for easy access and backup.
 
 ### Download/Pre-built Binaries
