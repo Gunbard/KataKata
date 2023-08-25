@@ -1,7 +1,12 @@
 # KataKata
-Simple inventory/catalog management system for collecting crap
+Simple inventory/catalog management system for collecting crap mostly based around UPCs
 
 ![KataKata screenshot](/readme-img/screenshot-1.0.0.png)
+
+### Features
+- Automatic UPC data lookup and scraping
+- Data is saved locally, including images
+- Extremely portable
 
 ### Sample workflow I use
 - Connect a cheap barcode scanner to phone
@@ -48,5 +53,5 @@ Built exe will be in 'dist' folder
 - [ ] Multithread instead of locking up the UI when refreshing
 - [ ] Date added/acquired field
 - [ ] Recent catalogs list
-- [ ] Custom/multiple UPC data sources
+- [ ] Custom/multiple UPC data sources instead of being a jerk and scraping public database sites
 - [ ] Make an icon
