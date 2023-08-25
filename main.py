@@ -282,13 +282,23 @@ def tableItemDoubleClicked(row, column):
   
   newLabel = QtWidgets.QLabel()
   newLabel.setPixmap(image)
+  newLabel.setMinimumSize(1, 1)
+
+  def resized(newSize):
+    newLabel.setPixmap(image.scaled(newSize.size().width(), newSize.size().height(), \
+                                    QtCore.Qt.KeepAspectRatio, \
+                                    QtCore.Qt.SmoothTransformation))
+
   newDialog = QtWidgets.QDialog()
   newDialog.setWindowTitle("Image Viewer")
+  newDialog.resizeEvent = resized
+  newDialog.setMaximumSize(app.primaryScreen().availableSize().width(), \
+                           app.primaryScreen().availableSize().height())
   dialogLayout = QtWidgets.QGridLayout()
+  dialogLayout.setContentsMargins(0, 0, 0, 0)
   dialogLayout.addWidget(newLabel, 0, 0, QtCore.Qt.AlignCenter)
   newDialog.setLayout(dialogLayout)
   newDialog.exec()
-
 
 def importFromFile():
   global currentCatalog
