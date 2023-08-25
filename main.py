@@ -162,7 +162,6 @@ def refreshAll(newOnly):
   updateTitle()
   updateTable()
 
-
 def refreshDialogClosed(event):
   print("Refresh dialog closed")
 
@@ -208,6 +207,7 @@ def addUpc():
     return
 
   newItem = ItemModel(None, None, None, upc, None, None)
+  newItem.generateUuid()
 
   if ui.checkBoxAutorefreshUPC.isChecked():
     UpcDataRetriever().refresh(newItem)
@@ -218,49 +218,17 @@ def addUpc():
 
   ui.lineEditAddUPC.clear()
 
-def moveRow(up, selection):
-  global currentCatalog
-
-  row = selection[0].row()
-  direction = -1 if up == True else 1
-
-  if up == True and row == 0:
-    return
-  elif up == False and row == ui.tableData.rowCount() - 1:
-    return
-
-  targetRow = row + (1 * direction)
-
-  currentCatalog.data[row], currentCatalog.data[targetRow] = currentCatalog.data[targetRow], currentCatalog.data[row]
-    
-  ui.actionSave_Catalog.setEnabled(True)
-  updateItemInRow(currentCatalog.data[row], row)
-  updateItemInRow(currentCatalog.data[targetRow], targetRow)
-  ui.tableData.selectRow(targetRow)
-  updateTitle()
-
 def tableContextMenu(position):
   selection = ui.tableData.selectionModel().selectedRows()
   rowCount = ui.tableData.rowCount()
   if rowCount == 0:
     return
   menu = QMenu()
-  #moveUpAction = menu.addAction("Move Up")
-  #if selection[0].row() == 0:
-  #  moveUpAction.setEnabled(False)
-  #moveDownAction = menu.addAction("Move Down")
-  #if selection[0].row() == rowCount - 1:
-  #  moveDownAction.setEnabled(False)
-  #menu.addSeparator()
   refreshAction = menu.addAction("Refresh")
   menu.addSeparator()
   deleteAction = menu.addAction("Delete")
 
   action = menu.exec_(ui.tableData.mapToGlobal(position))
-  # if action == moveUpAction:
-  #   moveRow(True, selection)
-  # elif action == moveDownAction:
-  #   moveRow(False, selection)
   if action == refreshAction:
     refreshSelection(selection)
   elif action == deleteAction:
