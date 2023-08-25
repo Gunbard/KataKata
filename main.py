@@ -44,6 +44,8 @@ MainWindow = QtWidgets.QMainWindow()
 ui = Ui_MainWindow()
 ui.setupUi(MainWindow)
 ui.tableData.hideColumn(TableColumns.UUID.value)
+status = QLabel("")
+ui.statusBar.addPermanentWidget(status)
 
 RefreshDialog = QtWidgets.QDialog(MainWindow)
 refreshDialog = Ui_RefreshDialog()
@@ -82,7 +84,7 @@ def updateTable():
 
   ui.tableData.setSortingEnabled(True)
 
-  ui.statusBar.showMessage("{} item(s) in [{}]".format(ui.tableData.rowCount(), currentCatalog.getTitle()))
+  status.setText("{} item(s) in [{}]".format(ui.tableData.rowCount(), currentCatalog.getTitle()))
   updateTitle()
 
 def addItem(item):
