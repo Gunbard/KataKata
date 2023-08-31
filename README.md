@@ -49,7 +49,7 @@ Built exe will be in 'dist' folder
 
 ### TODO
 - [ ] Generate an HTML report
-- [ ] Searching/filtering
+- [X] Searching/filtering
 - [ ] Multithread instead of locking up the UI when refreshing
 - [ ] Date added/acquired field
 - [ ] Recent catalogs list
