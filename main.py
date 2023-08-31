@@ -16,7 +16,7 @@ from models.catalogModel import CatalogModel
 from models.itemModel import ItemModel
 
 APP_TITLE = 'KataKata'
-VERSION = '1.3.0'
+VERSION = '1.4.0'
 WINDOW_TITLE = "{} {}".format(APP_TITLE, VERSION)
 MAX_BATCH_SIZE = 1
 
@@ -290,6 +290,7 @@ def scrollToFoundItem():
 
   ui.tableData.scrollToItem(findMatches[findMatchIndex], QtWidgets.QAbstractItemView.ScrollHint.PositionAtCenter)
   # Deselect previous, if any
+  ui.tableData.clearSelection()
   for item in findMatches:
     item.setSelected(False)
   findMatches[findMatchIndex].setSelected(True)
