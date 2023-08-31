@@ -290,6 +290,9 @@ def tableItemDoubleClicked(row, column):
 def findChanged(shouldClear):
   global findMatches, findMatchIndex
 
+  if len(ui.lineEditFind.text()) == 0:
+    return
+
   if shouldClear:
     ui.lineEditFind.clear()
     ui.tableData.clearSelection()
@@ -315,6 +318,9 @@ def scrollToFoundItem():
 def find(previous):
   global findMatches, findMatchIndex
   
+  if len(ui.lineEditFind.text()) == 0:
+    return
+
   if not findMatches:
     matches = ui.tableData.findItems(ui.lineEditFind.text(), QtCore.Qt.MatchFlag.MatchContains)
     
