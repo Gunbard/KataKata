@@ -6,6 +6,8 @@ import sys
 import asyncio
 import qasync
 import time
+import urllib.parse
+import webbrowser
 from mainWindow import Ui_MainWindow
 from refreshDialog import Ui_RefreshDialog
 from enum import Enum
@@ -17,7 +19,7 @@ from models.itemModel import ItemModel
 
 APP_TITLE = 'KataKata'
 VERSION = '1.4.0'
-WINDOW_TITLE = "{} {}".format(APP_TITLE, VERSION)
+WINDOW_TITLE = "{}".format(APP_TITLE)
 MAX_BATCH_SIZE = 1
 
 class TableColumns(Enum):
@@ -223,18 +225,30 @@ def addUpc():
 
   ui.lineEditAddUPC.clear()
 
+def doGoogle(selections):
+  global currentCatalog
+
+  retriever = UpcDataRetriever()
+  for index in selections:
+    item = getItemByRow(index.row())
+    if item:
+      webbrowser.open("https://www.google.com/search?q={}".format(urllib.parse.quote_plus(item.name)))
+
 def tableContextMenu(position):
   selection = ui.tableData.selectionModel().selectedRows()
   rowCount = ui.tableData.rowCount()
   if rowCount == 0:
     return
   menu = QMenu()
+  googleAction = menu.addAction("Google")
   refreshAction = menu.addAction("Refresh")
   menu.addSeparator()
   deleteAction = menu.addAction("Delete")
 
   action = menu.exec_(ui.tableData.mapToGlobal(position))
-  if action == refreshAction:
+  if action == googleAction:
+    doGoogle(selection)
+  elif action == refreshAction:
     refreshSelection(selection)
   elif action == deleteAction:
     deleteSelection(selection)
@@ -278,6 +292,7 @@ def findChanged(shouldClear):
 
   if shouldClear:
     ui.lineEditFind.clear()
+    ui.tableData.clearSelection()
   findMatchIndex = None
   findMatches = None
   ui.statusBar.clearMessage()
