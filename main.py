@@ -29,6 +29,8 @@ class TableColumns(Enum):
   UUID = 5
 
 currentCatalog = CatalogModel([], None)
+findMatches = None
+findMatchIndex = None
 
 # APP SETUP
 
@@ -77,6 +79,7 @@ def updateTable():
 
   ui.tableData.setSortingEnabled(False)
   ui.tableData.setRowCount(0)
+  ui.tableData.setStyleSheet("selection-background-color: DeepSkyBlue")
 
   if currentCatalog.data:
     for item in currentCatalog.data:
@@ -270,6 +273,52 @@ def tableItemDoubleClicked(row, column):
   newDialog.setLayout(dialogLayout)
   newDialog.exec()
 
+def findChanged(shouldClear):
+  global findMatches, findMatchIndex
+
+  if shouldClear:
+    ui.lineEditFind.clear()
+  findMatchIndex = None
+  findMatches = None
+  ui.statusBar.clearMessage()
+
+def scrollToFoundItem():
+  global findMatches, findMatchIndex
+
+  if not findMatches or findMatchIndex == None:
+    return
+
+  ui.tableData.scrollToItem(findMatches[findMatchIndex], QtWidgets.QAbstractItemView.ScrollHint.PositionAtCenter)
+  # Deselect previous, if any
+  for item in findMatches:
+    item.setSelected(False)
+  findMatches[findMatchIndex].setSelected(True)
+
+  ui.statusBar.showMessage("Found {}/{}".format(findMatchIndex + 1, len(findMatches)))
+
+def find(previous):
+  global findMatches, findMatchIndex
+  
+  if not findMatches:
+    matches = ui.tableData.findItems(ui.lineEditFind.text(), QtCore.Qt.MatchFlag.MatchContains)
+    
+    if matches:
+      findMatches = matches
+      findMatchIndex = 0
+  else:
+    if previous:
+      if findMatchIndex > 0:
+        findMatchIndex -= 1
+      else:
+        findMatchIndex = len(findMatches) - 1
+    else:
+      if findMatchIndex < len(findMatches) - 1:
+        findMatchIndex += 1
+      else:
+        findMatchIndex = 0
+
+  scrollToFoundItem()
+
 def importFromFile():
   global currentCatalog
 
@@ -395,6 +444,11 @@ ui.actionGenerate_HTML_Report.triggered.connect(generateReport)
 ui.actionRefreshAll.triggered.connect(lambda: refreshAll(False))
 ui.actionRefreshAllNew.triggered.connect(lambda: refreshAll(True))
 ui.actionAbout.triggered.connect(showAbout)
+ui.findButton.clicked.connect(lambda: find(False))
+ui.findClearButton.clicked.connect(lambda: findChanged(True))
+ui.findPrevButton.clicked.connect(lambda: find(True))
+ui.lineEditFind.returnPressed.connect(lambda: find(False))
+ui.lineEditFind.textChanged.connect(lambda: findChanged(False))
 
 # TODO: Implement HTML report generation
 ui.actionGenerate_HTML_Report.setVisible(False)
