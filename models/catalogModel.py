@@ -39,7 +39,11 @@ class CatalogModel:
     title = soup.new_tag("div")
     title.attrs['class'] = 'catalogTitle'
     title.append(self.getTitle())
+    count = soup.new_tag("div")
+    count.attrs['class'] = 'itemCount'
+    count.append("{} items".format(len(self.data)))
     header.append(title)
+    header.append(count)
     header.append("Generated on {}.".format(now.strftime("%m/%d/%Y %I:%M:%S %p")))
     container.append(header)
 
