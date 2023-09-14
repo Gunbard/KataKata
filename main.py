@@ -56,7 +56,7 @@ refreshDialog = Ui_RefreshDialog()
 refreshDialog.setupUi(RefreshDialog)
 
 MainWindow.setWindowTitle("{} - {}".format(
-    WINDOW_TITLE, "New Catalog"))
+    "New Catalog", WINDOW_TITLE))
 MainWindow.show()
 
 def updateTitle():
@@ -64,12 +64,12 @@ def updateTitle():
 
   if ui.tableData.rowCount() == 0:
     MainWindow.setWindowTitle("{} - {}".format(
-    WINDOW_TITLE, "New Catalog"))
+     "New Catalog", WINDOW_TITLE))
     return
 
   unsavedIndicator = '*' if ui.actionSave_Catalog.isEnabled() else ''
-  MainWindow.setWindowTitle("{} - {}{}".format(
-    WINDOW_TITLE, currentCatalog.getTitle(), unsavedIndicator))
+  MainWindow.setWindowTitle("{}{} - {}".format(
+    currentCatalog.getTitle(), unsavedIndicator, WINDOW_TITLE))
 
 def getItemByRow(row):
   index = ui.tableData.model().index(row, TableColumns.UUID.value)
