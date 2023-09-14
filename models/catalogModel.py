@@ -1,5 +1,6 @@
 import json
 import os
+from bs4 import BeautifulSoup, Tag
 from models.itemModel import ItemModelJSONEncoder, ItemModelJSONDecoder
 
 class CatalogModel:
@@ -15,6 +16,54 @@ class CatalogModel:
       return os.path.splitext(os.path.basename(self.filepath))[0]
     else:
       return ''
+    
+  def getHTML(self):
+    soup = BeautifulSoup()
+    html = soup.new_tag("html")
+    style = soup.new_tag("style")
+    style.append("body { font-family: 'Georgia', serif; }\n" \
+                 "img { max-width: 256px; max-height: 256px; }\n" \
+                 ".item { padding: 16px; }\n" \
+                 ".item div { padding: 8px; }\n" \
+                 ".name {font-weight: bold; }\n")
+    container = soup.new_tag("div")
+    container.attrs['class'] = 'mainContainer'
+    soup.append(html)
+    html.append(style)
+    html.append(container)
+    for item in self.data:
+      newItem = soup.new_tag("div")
+      newItem.attrs['class'] = 'item'
+      
+      newItemName = soup.new_tag("div")
+      newItemName.attrs['class'] = 'name'
+      newItemName.append(item.name) if item.name else ""
+      newItem.append(newItemName)
+
+      newItemUPC = soup.new_tag("div")
+      newItemUPC.attrs['class'] = 'upc'
+      newItemUPC.append(item.upc) if item.upc else ""
+      newItem.append(newItemUPC)
+
+      newItemDesc = soup.new_tag("div")
+      newItemDesc.attrs['class'] = 'desc'
+      newItemDesc.append(item.description) if item.description else ""
+      newItem.append(newItemDesc)
+
+      newItemNote = soup.new_tag("div")
+      newItemNote.attrs['class'] = 'note'
+      newItemNote.append(item.note) if item.note else ""
+      newItem.append(newItemNote)
+
+      if item.image:
+        newItemImg = soup.new_tag("img")
+        newItemImg.attrs['class'] = 'image'
+        newItemImg.attrs['src'] = "data:image/png;base64," + item.serializedImage()
+        newItem.append(newItemImg)
+      
+      container.append(newItem)
+
+    return soup.prettify()
 
   def save(self):
     if not self.filepath or not self.data:

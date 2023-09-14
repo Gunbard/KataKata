@@ -391,6 +391,7 @@
      <string>Tools</string>
     </property>
     <addaction name="actionGenerate_HTML_Report"/>
+    <addaction name="separator"/>
     <addaction name="actionRefreshAll"/>
     <addaction name="actionRefreshAllNew"/>
    </widget>
@@ -440,6 +441,9 @@
    </property>
   </action>
   <action name="actionGenerate_HTML_Report">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Generate HTML Report</string>
    </property>

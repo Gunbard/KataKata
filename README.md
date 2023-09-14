@@ -48,7 +48,7 @@ pyinstaller --onefile --noconsole main.py
 Built exe will be in 'dist' folder
 
 ### TODO
-- [ ] Generate an HTML report
+- [X] Generate an HTML report
 - [X] Searching/filtering
 - [ ] Multithread instead of locking up the UI when refreshing
 - [ ] Date added/acquired field

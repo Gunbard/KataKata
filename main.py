@@ -364,6 +364,7 @@ def newCatalog():
 
   currentCatalog = CatalogModel([], None)
   updateTable()
+  ui.actionGenerate_HTML_Report.setEnabled(False)
 
 def openCatalog():
   global currentCatalog
@@ -378,6 +379,7 @@ def openCatalog():
   currentCatalog = CatalogModel(None, path[0])
   currentCatalog.load()
   updateTable()
+  ui.actionGenerate_HTML_Report.setEnabled(True)
 
 def saveCatalog(forceSave):
   global currentCatalog
@@ -446,8 +448,17 @@ def showAbout():
   GitHub: <a href="https://github.com/Gunbard/KataKata">https://github.com/Gunbard/KataKata</a>'.format(VERSION))
 
 def generateReport():
-  pass
+  global currentCatalog
 
+  if currentCatalog and currentCatalog.filepath:
+    savePath = QtWidgets.QFileDialog.getSaveFileName(None, "Save HTML Report...", "{} - {}".format(APP_TITLE, currentCatalog.getTitle()), \
+    "HTML Report (*.html);;All files (*.*)")
+    if not savePath[0]:
+      return
+    
+    file = open(savePath[0], 'w')
+    file.write(currentCatalog.getHTML())
+    
 # EVENTS
 MainWindow.closeEvent = lambda event: appClose(event)
 RefreshDialog.closeEvent = lambda event: refreshDialogClosed(event)
@@ -471,9 +482,6 @@ ui.findClearButton.clicked.connect(lambda: findChanged(True))
 ui.findPrevButton.clicked.connect(lambda: find(True))
 ui.lineEditFind.returnPressed.connect(lambda: find(False))
 ui.lineEditFind.textChanged.connect(lambda: findChanged(False))
-
-# TODO: Implement HTML report generation
-ui.actionGenerate_HTML_Report.setVisible(False)
 
 with loop:
   loop.run_forever()

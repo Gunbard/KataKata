@@ -32,6 +32,16 @@ class ItemModel:
   def generateUuid(self):
     self.uid = str(uuid.uuid4())
 
+  def serializedImage(self):
+    if not self.image:
+      return None
+    ba = QtCore.QByteArray()
+    buffer = QtCore.QBuffer(ba)
+    buffer.open(QtCore.QIODevice.WriteOnly)
+    self.image.save(buffer, 'PNG')
+    base64_data = ba.toBase64()
+    return bytes(base64_data).decode('ascii')
+
 class ItemModelJSONEncoder(JSONEncoder):
   def default(self, obj):
     if isinstance(obj, ItemModel):
