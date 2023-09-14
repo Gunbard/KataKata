@@ -36,7 +36,11 @@ class CatalogModel:
     header = soup.new_tag("div")
     header.attrs['class'] = 'header'
     now = datetime.now()
-    header.append("Generated on {}.".format(now.strftime("%m/%d/%Y %H:%M:%S")))
+    title = soup.new_tag("div")
+    title.attrs['class'] = 'catalogTitle'
+    title.append(self.getTitle())
+    header.append(title)
+    header.append("Generated on {}.".format(now.strftime("%m/%d/%Y %I:%M:%S %p")))
     container.append(header)
 
     for item in self.data:
