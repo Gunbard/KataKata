@@ -18,7 +18,7 @@ from models.catalogModel import CatalogModel
 from models.itemModel import ItemModel
 
 APP_TITLE = 'KataKata'
-VERSION = '1.4.0'
+VERSION = '1.5.0'
 WINDOW_TITLE = "{}".format(APP_TITLE)
 MAX_BATCH_SIZE = 1
 

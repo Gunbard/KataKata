@@ -1,6 +1,7 @@
 import json
 import os
 from bs4 import BeautifulSoup, Tag
+from datetime import datetime
 from models.itemModel import ItemModelJSONEncoder, ItemModelJSONDecoder
 
 class CatalogModel:
@@ -18,6 +19,7 @@ class CatalogModel:
       return ''
     
   def getHTML(self):
+    # TODO: Sorting options
     soup = BeautifulSoup()
     html = soup.new_tag("html")
     style = soup.new_tag("style")
@@ -31,6 +33,12 @@ class CatalogModel:
     soup.append(html)
     html.append(style)
     html.append(container)
+    header = soup.new_tag("div")
+    header.attrs['class'] = 'header'
+    now = datetime.now()
+    header.append("Generated on {}.".format(now.strftime("%m/%d/%Y %H:%M:%S")))
+    container.append(header)
+
     for item in self.data:
       newItem = soup.new_tag("div")
       newItem.attrs['class'] = 'item'
