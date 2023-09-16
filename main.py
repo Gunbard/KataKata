@@ -353,7 +353,9 @@ def importFromFile():
     return
   fileHandle = open(path[0])
   for line in fileHandle:
-      currentCatalog.data.append(ItemModel(None, None, None, line.strip(), None, None))
+      upc = line.strip()
+      if upc:
+        currentCatalog.data.append(ItemModel(None, None, None, line, None, None))
   updateTable()
 
 def newCatalog():
