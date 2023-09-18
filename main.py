@@ -18,7 +18,7 @@ from models.catalogModel import CatalogModel
 from models.itemModel import ItemModel
 
 APP_TITLE = 'KataKata'
-VERSION = '1.5.0'
+VERSION = '1.6.0'
 WINDOW_TITLE = "{}".format(APP_TITLE)
 MAX_BATCH_SIZE = 1
 
@@ -355,7 +355,9 @@ def importFromFile():
   for line in fileHandle:
       upc = line.strip()
       if upc:
-        currentCatalog.data.append(ItemModel(None, None, None, line, None, None))
+        newItem = ItemModel(None, None, None, upc, None, None)
+        newItem.generateUuid()
+        currentCatalog.data.append(newItem)
   updateTable()
 
 def newCatalog():
@@ -396,6 +398,7 @@ def saveCatalog(forceSave):
   currentCatalog.save()
   ui.actionSave_Catalog.setEnabled(False)
   updateTitle()
+  updateTable()
 
 def itemUpdated(topLeft, bottomRight, roles):
   global currentCatalog
