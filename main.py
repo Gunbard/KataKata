@@ -369,6 +369,7 @@ def newCatalog():
   currentCatalog = CatalogModel([], None)
   updateTable()
   ui.actionGenerate_HTML_Report.setEnabled(False)
+  ui.actionGenerate_CSV_File.setEnabled(False)
 
 def openCatalog():
   global currentCatalog
@@ -384,6 +385,7 @@ def openCatalog():
   currentCatalog.load()
   updateTable()
   ui.actionGenerate_HTML_Report.setEnabled(True)
+  ui.actionGenerate_CSV_File.setEnabled(True)
 
 def saveCatalog(forceSave):
   global currentCatalog
@@ -461,9 +463,21 @@ def generateReport():
     if not savePath[0]:
       return
     
-    file = open(savePath[0], 'w')
+    file = open(savePath[0], 'w', encoding='utf-8')
     file.write(currentCatalog.getHTML())
+
+def generateCSVFile():
+  global currentCatalog
+
+  if currentCatalog and currentCatalog.filepath:
+    savePath = QtWidgets.QFileDialog.getSaveFileName(None, "Save CSV...", "{} - {}".format(APP_TITLE, currentCatalog.getTitle()), \
+    "CSV (*.csv);;All files (*.*)")
+    if not savePath[0]:
+      return
     
+    file = open(savePath[0], 'w' , encoding='utf-8')
+    file.write(currentCatalog.getCSV())
+
 # EVENTS
 MainWindow.closeEvent = lambda event: appClose(event)
 RefreshDialog.closeEvent = lambda event: refreshDialogClosed(event)
@@ -479,6 +493,7 @@ ui.actionSave_Catalog_As.triggered.connect(lambda: saveCatalog(True))
 ui.actionImport.triggered.connect(importFromFile)
 ui.actionQuit.triggered.connect(quitApp)
 ui.actionGenerate_HTML_Report.triggered.connect(generateReport)
+ui.actionGenerate_CSV_File.triggered.connect(generateCSVFile)
 ui.actionRefreshAll.triggered.connect(lambda: refreshAll(False))
 ui.actionRefreshAllNew.triggered.connect(lambda: refreshAll(True))
 ui.actionAbout.triggered.connect(showAbout)

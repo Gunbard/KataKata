@@ -4,6 +4,8 @@ from bs4 import BeautifulSoup, Tag
 from datetime import datetime
 from models.itemModel import ItemModelJSONEncoder, ItemModelJSONDecoder
 
+CSV_DELIMITER = '\t'
+
 class CatalogModel:
   def __init__(self, data, filepath):
     # List of ItemModels
@@ -80,6 +82,23 @@ class CatalogModel:
       container.append(newItem)
 
     return soup.prettify()
+
+  def getCSV(self):
+    output = 'Name' + CSV_DELIMITER + 'Description' + CSV_DELIMITER + 'UPC' + CSV_DELIMITER + 'Note' + CSV_DELIMITER + '\n'
+    for item in self.data:
+      output += '"' 
+      output += item.name if item.name else ''
+      output += '"' + CSV_DELIMITER
+      output += '"' 
+      output += item.description if item.description else ''
+      output += '"' + CSV_DELIMITER
+      output += '"' 
+      output += item.upc if item.upc else ''
+      output += '"' + CSV_DELIMITER
+      output += '"' 
+      output += item.note if item.note else ''
+      output += '"' + CSV_DELIMITER + '\n'
+    return output
 
   def save(self):
     if not self.filepath or not self.data:

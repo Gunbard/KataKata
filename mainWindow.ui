@@ -391,6 +391,7 @@
      <string>Tools</string>
     </property>
     <addaction name="actionGenerate_HTML_Report"/>
+    <addaction name="actionGenerate_CSV_File"/>
     <addaction name="separator"/>
     <addaction name="actionRefreshAll"/>
     <addaction name="actionRefreshAllNew"/>
@@ -510,6 +511,14 @@
   <action name="actionRefreshAll">
    <property name="text">
     <string>Refresh All</string>
+   </property>
+  </action>
+  <action name="actionGenerate_CSV_File">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Generate CSV File</string>
    </property>
   </action>
  </widget>
